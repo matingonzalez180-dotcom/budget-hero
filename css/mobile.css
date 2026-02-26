@@ -253,8 +253,8 @@
     }
 }
 
-/* ---- Small Phone Adjustments (≤480px) ---- */
-@media (max-width: 480px) {
+/* ---- Small Phone Adjustments (≤520px) ---- */
+@media (max-width: 520px) {
     .top-bar {
         padding: 0 var(--space-3);
         height: 52px;
