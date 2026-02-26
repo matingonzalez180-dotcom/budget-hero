@@ -391,8 +391,8 @@
     }
 
     /* Hide keyboard shortcut hint on mobile */
-    .btn-primary .shortcut-hint,
-    .form-actions .shortcut-hint {
+    .form-actions kbd,
+    .btn-primary kbd {
         display: none;
     }
 
