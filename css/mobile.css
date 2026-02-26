@@ -264,34 +264,154 @@
         font-size: var(--fs-md);
     }
 
+    .top-bar-date {
+        font-size: var(--fs-xs);
+    }
+
     .page-container {
         padding: var(--space-3);
         padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
     }
 
+    /* -- 1. Summary Cards: 2 columns, smaller values -- */
     .summary-cards {
+        grid-template-columns: repeat(2, 1fr);
         gap: var(--space-3);
     }
 
     .card {
-        padding: var(--space-4);
+        padding: var(--space-3);
     }
 
     .card-value {
         font-size: var(--fs-lg);
     }
 
+    .card-label {
+        font-size: var(--fs-xs);
+    }
+
+    .card-icon {
+        display: none;
+    }
+
+    .summary-card {
+        padding: var(--space-3) var(--space-4);
+    }
+
+    /* -- 2. Metric Cards: 2 cols, centered SVGs smaller -- */
+    .metric-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-3);
+    }
+
+    .metric-card {
+        padding: var(--space-3);
+        align-items: center;
+        text-align: center;
+    }
+
+    .metric-header {
+        justify-content: center;
+    }
+
+    .metric-value {
+        font-size: var(--fs-lg);
+    }
+
+    .gauge-svg {
+        width: 100px;
+        height: 62px;
+    }
+
+    .donut-svg {
+        width: 65px;
+        height: 65px;
+    }
+
+    .dual-bar-label {
+        min-width: 45px;
+        font-size: 10px;
+    }
+
+    .dual-bar-value {
+        min-width: 40px;
+        font-size: 10px;
+    }
+
+    /* -- 3. Transaction Filters: stacked full-width -- */
+    .filter-group {
+        flex-direction: column;
+        width: 100%;
+    }
+
+    .filter-group .filter-select {
+        width: 100%;
+    }
+
+    .btn-export {
+        width: 100%;
+        justify-content: center;
+    }
+
+    /* Transaction row tighter */
+    .transaction-row {
+        padding: var(--space-3) var(--space-3);
+        gap: var(--space-3);
+    }
+
+    .tx-icon {
+        width: 36px;
+        height: 36px;
+        font-size: var(--fs-md);
+    }
+
+    .tx-description {
+        font-size: var(--fs-sm);
+    }
+
+    .tx-amount {
+        font-size: var(--fs-sm);
+    }
+
+    /* Make tx action buttons visible on touch */
+    .tx-actions {
+        opacity: 1;
+    }
+
+    /* -- 4. Modal form-row: stack vertically -- */
+    .form-row {
+        flex-direction: column;
+        gap: var(--space-3);
+    }
+
+    .type-btn {
+        font-size: var(--fs-xs);
+        padding: var(--space-2) var(--space-2);
+    }
+
+    /* Hide keyboard shortcut hint on mobile */
+    .btn-primary .shortcut-hint,
+    .form-actions .shortcut-hint {
+        display: none;
+    }
+
+    /* -- 5. Mascot: column layout -- */
     .mascot-container {
         flex-direction: column;
         text-align: center;
     }
 
     .mascot-character {
-        width: 64px;
-        height: 64px;
+        width: 56px;
+        height: 56px;
     }
 
-    /* Pie charts horizontal scroll */
+    .mascot-greeting {
+        font-size: var(--fs-md);
+    }
+
+    /* -- Pie charts: horizontal scroll -- */
     .pie-charts-row {
         display: flex;
         overflow-x: auto;
@@ -307,7 +427,7 @@
         flex-shrink: 0;
     }
 
-    /* Amount input size for mobile */
+    /* Amount input */
     .amount-input {
         font-size: var(--fs-2xl);
     }
@@ -316,15 +436,158 @@
         font-size: var(--fs-xl);
     }
 
-    /* Period selector smaller */
+    /* Period selector */
     .period-btn {
         padding: var(--space-2) var(--space-3);
         font-size: var(--fs-xs);
     }
 
-    .metric-cards {
-        grid-template-columns: repeat(2, 1fr);
+    /* -- 7. Budget Overview: reduce min-widths, wrap -- */
+    .dash-budget-item {
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+
+    .dash-budget-info {
+        min-width: 100px;
+        flex: 0 0 auto;
+    }
+
+    .dash-budget-name {
+        font-size: var(--fs-xs);
+    }
+
+    .dash-budget-amounts {
+        min-width: auto;
+        gap: 2px;
+    }
+
+    .dash-budget-spent,
+    .dash-budget-limit,
+    .dash-budget-sep {
+        font-size: var(--fs-xs);
+    }
+
+    .dash-budget-pct {
+        font-size: 10px;
+        min-width: 32px;
+    }
+
+    /* -- Banners smaller on mobile -- */
+    .ebook-banner {
+        padding: var(--space-3);
+    }
+
+    .ebook-banner h4 {
+        font-size: var(--fs-sm);
+    }
+
+    .ebook-banner p {
+        font-size: var(--fs-xs);
+    }
+
+    /* -- 8. Sidebar: ensure Reiniciar is reachable -- */
+    .sidebar {
+        padding-bottom: var(--space-8);
+    }
+
+    .sidebar-footer {
+        padding: var(--space-4);
+    }
+
+    /* -- Contextual tips responsive -- */
+    .contextual-tips-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* -- Calendar month nav smaller -- */
+    .calendar-month-nav span {
+        min-width: 120px;
+        font-size: var(--fs-sm);
+    }
+
+    /* -- Goals grid single column -- */
+    .goals-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* -- Budget page actions stack -- */
+    .budget-smart-actions {
+        flex-direction: column;
+    }
+
+    .budget-smart-actions .btn-secondary,
+    .budget-smart-actions .btn-primary {
+        width: 100%;
+        justify-content: center;
+    }
+
+    .budgets-header {
+        flex-direction: column;
         gap: var(--space-3);
+    }
+}
+
+/* ---- iPhone 13 / Small Phone (≤390px) ---- */
+@media (max-width: 390px) {
+
+    /* Bottom nav: tighter for narrow screens */
+    .mobile-nav-inner {
+        height: 54px;
+    }
+
+    .mobile-nav-btn {
+        font-size: 9px;
+        gap: 1px;
+    }
+
+    .mobile-nav-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    /* Summary cards: values even smaller */
+    .card-value {
+        font-size: var(--fs-md);
+    }
+
+    /* Calendar day cells tighter */
+    .calendar-day {
+        min-height: 32px;
+        padding: 1px;
+    }
+
+    .calendar-day-number {
+        font-size: 10px;
+    }
+
+    .calendar-weekday {
+        font-size: 8px;
+        padding: var(--space-1) 0;
+    }
+
+    .calendar-due-icon {
+        font-size: 9px;
+        width: 15px;
+        height: 15px;
+    }
+
+    /* Page title smaller */
+    .top-bar-title h1 {
+        font-size: var(--fs-sm);
+    }
+
+    /* FAB slightly smaller */
+    .mobile-fab {
+        width: 50px;
+        height: 50px;
+        bottom: calc(62px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* Period buttons tighter */
+    .period-btn {
+        padding: var(--space-1) var(--space-2);
+        font-size: 10px;
     }
 }
 
