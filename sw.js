@@ -1,9 +1,9 @@
 // ============================================
 // SERVICE WORKER — Budget Hero PWA
-// Cache-first strategy for app shell
+// Network-first strategy (always get latest)
 // ============================================
 
-const CACHE_NAME = 'budget-hero-v1';
+const CACHE_NAME = 'budget-hero-v3';
 const APP_SHELL = [
     '/',
     '/index.html',
@@ -21,10 +21,13 @@ const APP_SHELL = [
     '/css/onboarding.css',
     '/css/mascot.css',
     '/css/mobile.css',
+    '/css/calendar.css',
+    '/css/banners.css',
     '/js/store.js',
     '/js/categories.js',
     '/js/chart.js',
     '/js/ai.js',
+    '/js/calendar.js',
     '/js/app.js'
 ];
 
@@ -49,44 +52,30 @@ self.addEventListener('activate', (event) => {
     );
 });
 
-// Fetch — cache-first, fallback to network
+// Fetch — network first, cache fallback (ensures updates always arrive)
 self.addEventListener('fetch', (event) => {
     // Skip non-GET requests
     if (event.request.method !== 'GET') return;
 
-    // For Google Fonts and external resources — network first, cache fallback
-    if (event.request.url.includes('fonts.googleapis.com') ||
-        event.request.url.includes('fonts.gstatic.com')) {
-        event.respondWith(
-            caches.open(CACHE_NAME).then((cache) => {
-                return fetch(event.request).then((response) => {
-                    cache.put(event.request, response.clone());
-                    return response;
-                }).catch(() => cache.match(event.request));
-            })
-        );
-        return;
-    }
-
-    // For app shell — cache first, fallback to network
     event.respondWith(
-        caches.match(event.request).then((cached) => {
-            if (cached) return cached;
-            return fetch(event.request).then((response) => {
-                // Cache successful responses for app resources
-                if (response.ok && event.request.url.startsWith(self.location.origin)) {
-                    const responseClone = response.clone();
-                    caches.open(CACHE_NAME).then((cache) => {
-                        cache.put(event.request, responseClone);
-                    });
-                }
-                return response;
-            });
-        }).catch(() => {
-            // Offline fallback for navigation
-            if (event.request.mode === 'navigate') {
-                return caches.match('/index.html');
+        fetch(event.request).then((response) => {
+            // Cache successful responses
+            if (response.ok && event.request.url.startsWith(self.location.origin)) {
+                const responseClone = response.clone();
+                caches.open(CACHE_NAME).then((cache) => {
+                    cache.put(event.request, responseClone);
+                });
             }
+            return response;
+        }).catch(() => {
+            // Offline — serve from cache
+            return caches.match(event.request).then((cached) => {
+                if (cached) return cached;
+                // Offline fallback for navigation
+                if (event.request.mode === 'navigate') {
+                    return caches.match('/index.html');
+                }
+            });
         })
     );
 });
