@@ -1,0 +1,530 @@
+/* ===================================
+   Calendar de Vencimientos — Styles
+   =================================== */
+
+/* ---- Calendar Page Header ---- */
+.calendar-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: var(--space-3);
+    margin-bottom: var(--space-4);
+}
+
+.calendar-month-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.calendar-month-nav span {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+    min-width: 200px;
+    text-align: center;
+    color: var(--text-primary);
+}
+
+.calendar-actions {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+}
+
+/* ---- Calendar Grid ---- */
+.calendar-grid-wrapper {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-4);
+    margin-bottom: var(--space-4);
+    overflow: hidden;
+}
+
+.calendar-weekdays {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 2px;
+    margin-bottom: var(--space-2);
+}
+
+.calendar-weekday {
+    text-align: center;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    color: var(--text-tertiary);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    padding: var(--space-2) 0;
+}
+
+.calendar-days {
+    display: grid;
+    grid-template-columns: repeat(7, 1fr);
+    gap: 3px;
+}
+
+.calendar-day {
+    min-height: 64px;
+    border-radius: var(--radius-md);
+    padding: var(--space-1) var(--space-2);
+    background: var(--bg-input);
+    border: 1px solid transparent;
+    position: relative;
+    transition: all 0.2s ease;
+    cursor: default;
+}
+
+.calendar-day:hover:not(.empty) {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-input));
+    transform: translateY(-1px);
+}
+
+.calendar-day.empty {
+    background: transparent;
+    border: none;
+}
+
+.calendar-day.today {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 12%, var(--bg-input));
+    box-shadow: 0 0 12px color-mix(in srgb, var(--accent) 25%, transparent);
+}
+
+.calendar-day.today .calendar-day-number {
+    background: var(--accent);
+    color: #fff;
+    border-radius: 50%;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+}
+
+.calendar-day-number {
+    font-size: var(--fs-sm);
+    font-weight: 500;
+    color: var(--text-secondary);
+    display: inline-block;
+    margin-bottom: 2px;
+}
+
+.calendar-day-icons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 3px;
+    margin-top: 2px;
+}
+
+.calendar-due-icon {
+    font-size: 14px;
+    width: 24px;
+    height: 24px;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    border: 2px solid transparent;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    position: relative;
+}
+
+.calendar-due-icon:hover {
+    transform: scale(1.3);
+    z-index: 2;
+}
+
+.calendar-due-icon.due-status-paid {
+    border-color: var(--success);
+    background: color-mix(in srgb, var(--success) 15%, transparent);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--success) 30%, transparent);
+}
+
+.calendar-due-icon.due-status-overdue {
+    border-color: var(--danger);
+    background: color-mix(in srgb, var(--danger) 15%, transparent);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--danger) 30%, transparent);
+    animation: pulse-glow 2s ease-in-out infinite;
+}
+
+.calendar-due-icon.due-status-upcoming {
+    border-color: var(--warning);
+    background: color-mix(in srgb, var(--warning) 15%, transparent);
+    box-shadow: 0 0 6px color-mix(in srgb, var(--warning) 30%, transparent);
+}
+
+.calendar-due-icon.due-status-pending {
+    border-color: var(--border-color);
+    background: var(--bg-input);
+}
+
+@keyframes pulse-glow {
+    0%, 100% { box-shadow: 0 0 6px color-mix(in srgb, var(--danger) 30%, transparent); }
+    50% { box-shadow: 0 0 14px color-mix(in srgb, var(--danger) 50%, transparent); }
+}
+
+/* ---- Filters ---- */
+.calendar-filters {
+    display: flex;
+    gap: var(--space-2);
+    flex-wrap: wrap;
+    margin-bottom: var(--space-4);
+}
+
+.calendar-filters .filter-select {
+    min-width: 140px;
+}
+
+/* ---- Due Payment Cards List ---- */
+.due-payments-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.due-payment-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-lg);
+    padding: var(--space-3) var(--space-4);
+    transition: all 0.2s ease;
+    border-left: 4px solid var(--border-color);
+}
+
+.due-payment-card:hover {
+    border-color: var(--accent);
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.due-payment-card.due-status-paid {
+    border-left-color: var(--success);
+}
+
+.due-payment-card.due-status-overdue {
+    border-left-color: var(--danger);
+    background: color-mix(in srgb, var(--danger) 4%, var(--bg-card));
+}
+
+.due-payment-card.due-status-upcoming {
+    border-left-color: var(--warning);
+    background: color-mix(in srgb, var(--warning) 4%, var(--bg-card));
+}
+
+.due-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-2);
+}
+
+.due-card-info {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.due-card-icon {
+    font-size: 28px;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-md);
+    background: var(--bg-input);
+    flex-shrink: 0;
+}
+
+.due-card-name {
+    font-weight: 600;
+    font-size: var(--fs-md);
+    color: var(--text-primary);
+}
+
+.due-card-meta {
+    font-size: var(--fs-xs);
+    color: var(--text-tertiary);
+    margin-top: 2px;
+}
+
+.due-card-right {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: var(--space-1);
+}
+
+.due-card-amount {
+    font-weight: 700;
+    font-size: var(--fs-md);
+    color: var(--text-primary);
+}
+
+.due-status-badge {
+    font-size: var(--fs-xs);
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+}
+
+.due-status-badge.status-paid {
+    background: color-mix(in srgb, var(--success) 15%, transparent);
+    color: var(--success);
+}
+
+.due-status-badge.status-overdue {
+    background: color-mix(in srgb, var(--danger) 15%, transparent);
+    color: var(--danger);
+}
+
+.due-status-badge.status-upcoming {
+    background: color-mix(in srgb, var(--warning) 15%, transparent);
+    color: var(--warning);
+}
+
+.due-status-badge.status-pending {
+    background: var(--bg-input);
+    color: var(--text-tertiary);
+}
+
+.due-card-ai-comment {
+    font-size: var(--fs-xs);
+    color: var(--text-secondary);
+    padding: var(--space-2) var(--space-3);
+    background: color-mix(in srgb, var(--accent) 6%, transparent);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-2);
+    border-left: 3px solid var(--accent);
+    line-height: 1.4;
+}
+
+.due-card-actions {
+    display: flex;
+    gap: var(--space-2);
+    align-items: center;
+}
+
+.btn-mark-paid, .btn-unmark-paid {
+    font-size: var(--fs-xs);
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--bg-input);
+    color: var(--text-primary);
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.2s ease;
+}
+
+.btn-mark-paid:hover {
+    background: var(--success);
+    color: #fff;
+    border-color: var(--success);
+}
+
+.btn-unmark-paid:hover {
+    background: var(--warning);
+    color: #fff;
+    border-color: var(--warning);
+}
+
+/* ---- Dashboard Widget ---- */
+.dashboard-dues-card {
+    margin-bottom: var(--space-4);
+}
+
+.due-alerts-container {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.due-alert {
+    padding: var(--space-3);
+    border-radius: var(--radius-md);
+    border: 1px solid var(--border-color);
+    background: var(--bg-card);
+    border-left: 4px solid var(--warning);
+    transition: all 0.2s ease;
+}
+
+.due-alert:hover {
+    transform: translateX(2px);
+}
+
+.due-alert.alert-overdue {
+    border-left-color: var(--danger);
+    background: color-mix(in srgb, var(--danger) 4%, var(--bg-card));
+}
+
+.due-alert.alert-upcoming {
+    border-left-color: var(--warning);
+    background: color-mix(in srgb, var(--warning) 4%, var(--bg-card));
+}
+
+.due-alert-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-1);
+}
+
+.due-alert-icon {
+    font-size: 20px;
+    flex-shrink: 0;
+}
+
+.due-alert-info {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.due-alert-name {
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    color: var(--text-primary);
+}
+
+.due-alert-date {
+    font-size: var(--fs-xs);
+    color: var(--text-tertiary);
+}
+
+.due-alert-badge {
+    font-size: 11px;
+    padding: 2px 8px;
+    border-radius: 99px;
+    font-weight: 600;
+    white-space: nowrap;
+}
+
+.due-alert-badge.badge-overdue {
+    background: color-mix(in srgb, var(--danger) 15%, transparent);
+    color: var(--danger);
+}
+
+.due-alert-badge.badge-upcoming {
+    background: color-mix(in srgb, var(--warning) 15%, transparent);
+    color: var(--warning);
+}
+
+.due-alert-comment {
+    font-size: 11px;
+    color: var(--text-secondary);
+    padding-left: 28px;
+    opacity: 0.85;
+}
+
+/* ---- Due Payment Modal Icon Picker ---- */
+.icon-picker-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-2);
+    padding: var(--space-2) 0;
+}
+
+.icon-picker-btn {
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    border: 2px solid var(--border-color);
+    border-radius: var(--radius-md);
+    background: var(--bg-input);
+    cursor: pointer;
+    transition: all 0.15s ease;
+}
+
+.icon-picker-btn:hover {
+    border-color: var(--accent);
+    transform: scale(1.1);
+}
+
+.icon-picker-btn.selected {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 15%, var(--bg-input));
+    box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 30%, transparent);
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+    .calendar-day {
+        min-height: 48px;
+        padding: 2px 3px;
+    }
+
+    .calendar-day-number {
+        font-size: 11px;
+    }
+
+    .calendar-due-icon {
+        font-size: 11px;
+        width: 18px;
+        height: 18px;
+        border-width: 1.5px;
+    }
+
+    .calendar-day.today .calendar-day-number {
+        width: 20px;
+        height: 20px;
+        font-size: 10px;
+    }
+
+    .calendar-header {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .calendar-month-nav span {
+        font-size: var(--fs-md);
+        min-width: 150px;
+    }
+
+    .calendar-actions {
+        justify-content: center;
+    }
+
+    .due-card-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .due-card-right {
+        flex-direction: row;
+        align-items: center;
+        gap: var(--space-2);
+        width: 100%;
+        justify-content: space-between;
+    }
+
+    .due-card-actions {
+        flex-wrap: wrap;
+    }
+}
+
+@media (max-width: 480px) {
+    .calendar-day {
+        min-height: 38px;
+        padding: 1px 2px;
+    }
+
+    .calendar-weekday {
+        font-size: 9px;
+    }
+
+    .calendar-due-icon {
+        font-size: 10px;
+        width: 16px;
+        height: 16px;
+    }
+}

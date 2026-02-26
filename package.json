@@ -1,0 +1,23 @@
+{
+  "name": "budget-hero",
+  "version": "1.0.0",
+  "description": "Budget Hero — Tu héroe de finanzas personales con IA",
+  "main": "index.html",
+  "scripts": {
+    "build": "powershell -Command \"Copy-Item -Recurse -Force css, js, icons, index.html, manifest.json, sw.js -Destination www\"",
+    "sync": "npm run build && npx cap sync android",
+    "open": "npx cap open android"
+  },
+  "keywords": [
+    "finance",
+    "budget",
+    "pwa"
+  ],
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "@capacitor/android": "^7.2.0",
+    "@capacitor/cli": "^7.2.0",
+    "@capacitor/core": "^7.2.0"
+  }
+}

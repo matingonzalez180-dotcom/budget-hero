@@ -1,0 +1,395 @@
+/* ============================================
+   MOBILE NAVIGATION & MOBILE-SPECIFIC STYLES
+   Budget Hero PWA
+   ============================================ */
+
+/* ---- Mobile Bottom Navigation ---- */
+.mobile-nav {
+    display: none;
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    z-index: 200;
+    background: var(--bg-secondary);
+    border-top: 1px solid var(--border-color);
+    padding-bottom: env(safe-area-inset-bottom, 0px);
+    backdrop-filter: blur(20px);
+    -webkit-backdrop-filter: blur(20px);
+}
+
+.mobile-nav-inner {
+    display: flex;
+    align-items: stretch;
+    justify-content: space-around;
+    height: 60px;
+    position: relative;
+}
+
+.mobile-nav-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    flex: 1;
+    padding: var(--space-1) 0;
+    color: var(--text-tertiary);
+    font-size: 10px;
+    font-weight: 500;
+    transition: color var(--transition-fast);
+    position: relative;
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+    min-height: 44px;
+}
+
+.mobile-nav-btn svg {
+    width: 22px;
+    height: 22px;
+    transition: transform var(--transition-fast);
+}
+
+.mobile-nav-btn.active {
+    color: var(--accent);
+}
+
+.mobile-nav-btn.active svg {
+    transform: scale(1.1);
+}
+
+.mobile-nav-btn.active::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 24px;
+    height: 3px;
+    background: var(--accent);
+    border-radius: 0 0 3px 3px;
+}
+
+/* ---- Mobile FAB (Floating Action Button) ---- */
+.mobile-fab {
+    display: none;
+    position: fixed;
+    bottom: calc(70px + env(safe-area-inset-bottom, 0px));
+    right: 16px;
+    z-index: 210;
+    width: 56px;
+    height: 56px;
+    border-radius: 50%;
+    background: var(--gradient-primary);
+    color: white;
+    align-items: center;
+    justify-content: center;
+    box-shadow: 0 4px 20px rgba(167, 139, 250, 0.4), 0 2px 8px rgba(0, 0, 0, 0.2);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    -webkit-tap-highlight-color: transparent;
+    touch-action: manipulation;
+}
+
+.mobile-fab:active {
+    transform: scale(0.92);
+}
+
+.mobile-fab svg {
+    width: 26px;
+    height: 26px;
+}
+
+/* ---- Show mobile elements on small screens ---- */
+@media (max-width: 768px) {
+    .mobile-nav {
+        display: block;
+    }
+
+    .mobile-fab {
+        display: flex;
+    }
+
+    /* Hide desktop add-transaction button on mobile */
+    .btn-add-transaction {
+        display: none;
+    }
+
+    /* Add bottom padding for content above bottom nav */
+    .page-container {
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    }
+
+    /* Hide sidebar completely on mobile - use bottom nav instead */
+    .sidebar {
+        position: fixed;
+        left: 0;
+        top: 0;
+        transform: translateX(-100%);
+    }
+
+    /* Sidebar overlay */
+    .sidebar-overlay {
+        display: none;
+        position: fixed;
+        inset: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: 99;
+        backdrop-filter: blur(2px);
+        -webkit-backdrop-filter: blur(2px);
+    }
+
+    .sidebar-overlay.active {
+        display: block;
+    }
+}
+
+/* ---- Tablet Adjustments (769px - 1024px) ---- */
+@media (min-width: 769px) and (max-width: 1024px) {
+
+    /* Modals: centered, max height with internal scroll */
+    .modal-overlay {
+        padding: var(--space-6) var(--space-4);
+    }
+
+    .modal {
+        width: 85%;
+        max-width: 520px;
+        max-height: 85vh;
+        overflow-y: auto;
+    }
+
+    .modal-lg {
+        max-width: 680px;
+    }
+
+    /* Dashboard grids adapt to 2 columns */
+    .summary-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .metric-cards {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    .dashboard-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Page container with slightly less padding */
+    .page-container {
+        padding: var(--space-6);
+    }
+
+    /* Goals grid adapts */
+    .goals-grid {
+        grid-template-columns: repeat(2, 1fr);
+    }
+
+    /* Make budget & goal card actions always visible on touch tablets */
+    .budget-cat-actions,
+    .budget-card-actions,
+    .goal-card-actions {
+        opacity: 1;
+    }
+
+    /* Budgets header wraps nicely */
+    .budgets-header {
+        flex-wrap: wrap;
+        gap: var(--space-4);
+    }
+
+    .budget-smart-actions {
+        flex-wrap: wrap;
+        gap: var(--space-2);
+    }
+}
+
+/* ---- Bottom Sheet Modals on Mobile ---- */
+@media (max-width: 768px) {
+    .modal-overlay {
+        align-items: flex-end;
+        padding: 0;
+        overflow-y: hidden;
+    }
+
+    .modal {
+        width: 100%;
+        max-width: 100%;
+        border-radius: var(--radius-xl) var(--radius-xl) 0 0;
+        max-height: 90vh;
+        overflow-y: auto;
+        padding: var(--space-6) var(--space-5);
+        padding-bottom: calc(var(--space-6) + env(safe-area-inset-bottom, 0px));
+        transform: translateY(100%);
+        margin: 0;
+    }
+
+    .modal-overlay.active .modal {
+        transform: translateY(0);
+    }
+
+    .modal-sm,
+    .modal-lg {
+        max-width: 100%;
+    }
+
+    /* Bottom sheet drag handle */
+    .modal::before {
+        content: '';
+        display: block;
+        width: 40px;
+        height: 4px;
+        background: var(--text-tertiary);
+        opacity: 0.3;
+        border-radius: 2px;
+        margin: 0 auto var(--space-4);
+    }
+
+    /* Make action buttons always visible on touch */
+    .budget-cat-actions,
+    .budget-card-actions,
+    .goal-card-actions {
+        opacity: 1;
+    }
+}
+
+/* ---- Small Phone Adjustments (≤480px) ---- */
+@media (max-width: 480px) {
+    .top-bar {
+        padding: 0 var(--space-3);
+        height: 52px;
+    }
+
+    .top-bar-title h1 {
+        font-size: var(--fs-md);
+    }
+
+    .page-container {
+        padding: var(--space-3);
+        padding-bottom: calc(80px + env(safe-area-inset-bottom, 0px));
+    }
+
+    .summary-cards {
+        gap: var(--space-3);
+    }
+
+    .card {
+        padding: var(--space-4);
+    }
+
+    .card-value {
+        font-size: var(--fs-lg);
+    }
+
+    .mascot-container {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .mascot-character {
+        width: 64px;
+        height: 64px;
+    }
+
+    /* Pie charts horizontal scroll */
+    .pie-charts-row {
+        display: flex;
+        overflow-x: auto;
+        scroll-snap-type: x mandatory;
+        gap: var(--space-3);
+        padding-bottom: var(--space-2);
+        -webkit-overflow-scrolling: touch;
+    }
+
+    .pie-charts-row>.card {
+        min-width: 85vw;
+        scroll-snap-align: start;
+        flex-shrink: 0;
+    }
+
+    /* Amount input size for mobile */
+    .amount-input {
+        font-size: var(--fs-2xl);
+    }
+
+    .currency-symbol {
+        font-size: var(--fs-xl);
+    }
+
+    /* Period selector smaller */
+    .period-btn {
+        padding: var(--space-2) var(--space-3);
+        font-size: var(--fs-xs);
+    }
+
+    .metric-cards {
+        grid-template-columns: repeat(2, 1fr);
+        gap: var(--space-3);
+    }
+}
+
+/* ---- PWA Standalone Mode Adjustments ---- */
+@media (display-mode: standalone) {
+
+    /* Extra top padding for status bar in standalone mode */
+    .top-bar {
+        padding-top: env(safe-area-inset-top, 0px);
+        height: calc(var(--topbar-height) + env(safe-area-inset-top, 0px));
+    }
+}
+
+/* ---- Touch Interaction Improvements ---- */
+@media (hover: none) and (pointer: coarse) {
+
+    /* Larger touch targets */
+    .nav-item {
+        padding: var(--space-4) var(--space-4);
+        min-height: 44px;
+    }
+
+    .btn-primary,
+    .btn-secondary,
+    .btn-ghost {
+        min-height: 44px;
+    }
+
+    .filter-select {
+        min-height: 44px;
+        padding: var(--space-3);
+    }
+
+    .period-btn {
+        min-height: 40px;
+    }
+
+    /* Remove hover effects on touch devices */
+    .nav-item:hover,
+    .card:hover,
+    .btn-primary:hover,
+    .btn-secondary:hover {
+        transform: none;
+    }
+}
+
+/* ---- Landscape Mobile ---- */
+@media (max-width: 768px) and (orientation: landscape) {
+    .mobile-nav-inner {
+        height: 48px;
+    }
+
+    .mobile-nav-btn {
+        font-size: 0;
+        gap: 0;
+    }
+
+    .mobile-nav-btn svg {
+        width: 20px;
+        height: 20px;
+    }
+
+    .mobile-fab {
+        width: 48px;
+        height: 48px;
+        bottom: calc(56px + env(safe-area-inset-bottom, 0px));
+    }
+}

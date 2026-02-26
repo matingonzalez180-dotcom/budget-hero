@@ -1,0 +1,167 @@
+/* ============================================
+   ANIMATIONS
+   ============================================ */
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(12px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes slideInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+
+    to {
+        opacity: 0;
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+    }
+
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes shimmer {
+    0% {
+        background-position: -200% 0;
+    }
+
+    100% {
+        background-position: 200% 0;
+    }
+}
+
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+@keyframes barGrow {
+    from {
+        width: 0;
+    }
+}
+
+/* ---- Staggered fade-in for lists ---- */
+.transaction-row {
+    animation: fadeInUp 0.3s ease both;
+}
+
+.transaction-row:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.transaction-row:nth-child(2) {
+    animation-delay: 40ms;
+}
+
+.transaction-row:nth-child(3) {
+    animation-delay: 80ms;
+}
+
+.transaction-row:nth-child(4) {
+    animation-delay: 120ms;
+}
+
+.transaction-row:nth-child(5) {
+    animation-delay: 160ms;
+}
+
+.transaction-row:nth-child(6) {
+    animation-delay: 200ms;
+}
+
+.transaction-row:nth-child(7) {
+    animation-delay: 240ms;
+}
+
+.transaction-row:nth-child(8) {
+    animation-delay: 280ms;
+}
+
+.summary-card {
+    animation: fadeInUp 0.4s ease both;
+}
+
+.summary-card:nth-child(1) {
+    animation-delay: 0ms;
+}
+
+.summary-card:nth-child(2) {
+    animation-delay: 80ms;
+}
+
+.summary-card:nth-child(3) {
+    animation-delay: 160ms;
+}
+
+.summary-card:nth-child(4) {
+    animation-delay: 240ms;
+}
+
+.budget-card {
+    animation: fadeInUp 0.3s ease both;
+}
+
+/* ---- Hover micro-animations ---- */
+.summary-card {
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.summary-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-glow);
+}
+
+.budget-card {
+    transition: transform var(--transition-base), box-shadow var(--transition-base);
+}
+
+.budget-card:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
+}

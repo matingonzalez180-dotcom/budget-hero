@@ -1,0 +1,12 @@
+{
+  "appId": "com.budgethero.app",
+  "appName": "Budget Hero",
+  "webDir": "www",
+  "server": {
+    "androidScheme": "https"
+  },
+  "android": {
+    "backgroundColor": "#0F0E1A",
+    "allowMixedContent": false
+  }
+}

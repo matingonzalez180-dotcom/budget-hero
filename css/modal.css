@@ -1,0 +1,264 @@
+/* ============================================
+   MODAL
+   ============================================ */
+
+.modal-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg-overlay);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 500;
+    opacity: 0;
+    visibility: hidden;
+    transition: all var(--transition-base);
+    backdrop-filter: blur(4px);
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+    padding: var(--space-8) var(--space-4);
+}
+
+.modal-overlay.active {
+    opacity: 1;
+    visibility: visible;
+}
+
+.modal {
+    width: 90%;
+    max-width: 480px;
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    border-radius: var(--radius-xl);
+    padding: var(--space-8);
+    box-shadow: var(--shadow-lg);
+    transform: translateY(20px) scale(0.97);
+    transition: all var(--transition-base);
+    margin: auto;
+    flex-shrink: 0;
+}
+
+.modal-overlay.active .modal {
+    transform: translateY(0) scale(1);
+}
+
+.modal-sm {
+    max-width: 380px;
+}
+
+.modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+}
+
+.modal-header h2 {
+    font-size: var(--fs-lg);
+    font-weight: 700;
+}
+
+.modal-close {
+    width: 32px;
+    height: 32px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: var(--radius-sm);
+    color: var(--text-tertiary);
+    transition: all var(--transition-fast);
+}
+
+.modal-close:hover {
+    color: var(--text-primary);
+    background: var(--bg-input);
+}
+
+/* ---- Transaction Form ---- */
+.form-type-toggle {
+    display: flex;
+    gap: var(--space-1);
+    background: var(--bg-input);
+    border-radius: var(--radius-full);
+    padding: 3px;
+    margin-bottom: var(--space-6);
+}
+
+.type-btn {
+    flex: 1;
+    padding: var(--space-2) var(--space-4);
+    font-weight: 600;
+    font-size: var(--fs-sm);
+    border-radius: var(--radius-full);
+    color: var(--text-tertiary);
+    transition: all var(--transition-fast);
+    text-align: center;
+}
+
+.type-btn:hover {
+    color: var(--text-primary);
+}
+
+.type-btn.active[data-type="expense"] {
+    background: var(--danger);
+    color: white;
+    box-shadow: 0 2px 8px rgba(245, 87, 108, 0.3);
+}
+
+.type-btn.active[data-type="income"] {
+    background: var(--success);
+    color: white;
+    box-shadow: 0 2px 8px rgba(0, 184, 148, 0.3);
+}
+
+.form-amount-row {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    margin-bottom: var(--space-5);
+}
+
+.form-amount-row.compact {
+    margin-bottom: 0;
+}
+
+.currency-symbol {
+    font-size: var(--fs-2xl);
+    font-weight: 700;
+    color: var(--text-tertiary);
+}
+
+.amount-input {
+    flex: 1;
+    font-size: var(--fs-3xl);
+    font-weight: 800;
+    background: none;
+    border: none;
+    color: var(--text-primary);
+    letter-spacing: -0.02em;
+    min-width: 0;
+}
+
+.amount-input::placeholder {
+    color: var(--text-tertiary);
+    opacity: 0.4;
+}
+
+.amount-input:focus {
+    outline: none;
+}
+
+#transaction-form .form-group {
+    margin-bottom: var(--space-4);
+}
+
+.form-row {
+    display: flex;
+    gap: var(--space-4);
+}
+
+.form-row .form-group {
+    flex: 1;
+    min-width: 0;
+}
+
+/* ---- AI Suggestion ---- */
+.ai-suggestion {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    padding: var(--space-3) var(--space-4);
+    background: var(--accent-subtle);
+    border: 1px solid rgba(167, 139, 250, 0.2);
+    border-radius: var(--radius-md);
+    margin-bottom: var(--space-5);
+    font-size: var(--fs-sm);
+}
+
+.ai-badge {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: var(--fs-xs);
+    white-space: nowrap;
+}
+
+.ai-suggestion span {
+    flex: 1;
+    font-weight: 500;
+}
+
+.btn-apply-ai {
+    padding: var(--space-1) var(--space-3);
+    background: var(--accent);
+    color: white;
+    font-size: var(--fs-xs);
+    font-weight: 600;
+    border-radius: var(--radius-full);
+    transition: all var(--transition-fast);
+}
+
+.btn-apply-ai:hover {
+    background: var(--accent-hover);
+}
+
+/* ---- Form Actions ---- */
+.form-actions {
+    display: flex;
+    align-items: center;
+    justify-content: flex-end;
+    gap: var(--space-3);
+    margin-top: var(--space-6);
+    padding-top: var(--space-5);
+    border-top: 1px solid var(--border-color);
+}
+
+/* ---- Category Manager ---- */
+.custom-cat-list {
+    max-height: 200px;
+    overflow-y: auto;
+    margin-bottom: var(--space-4);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-2);
+}
+
+.custom-cat-item {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: var(--space-2) var(--space-3);
+    background: var(--bg-input);
+    border-radius: var(--radius-md);
+    font-size: var(--fs-sm);
+}
+
+.cat-preview {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+}
+
+.cat-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+}
+
+.color-picker-wrapper {
+    width: 100%;
+    height: 42px;
+    border-radius: var(--radius-md);
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+}
+
+#cat-color {
+    width: 100%;
+    height: 100%;
+    padding: 0;
+    border: none;
+    cursor: pointer;
+}

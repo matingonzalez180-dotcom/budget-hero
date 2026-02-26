@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="512" height="512" viewBox="0 0 512 512">
+  <defs>
+    <linearGradient id="shield-grad" x1="0" y1="0" x2="512" y2="512" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#A78BFA"/>
+      <stop offset="1" stop-color="#67E8F9"/>
+    </linearGradient>
+    <linearGradient id="star-grad" x1="180" y1="140" x2="332" y2="380" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FDE68A"/>
+      <stop offset="1" stop-color="#FBBF24"/>
+    </linearGradient>
+  </defs>
+  <rect width="512" height="512" rx="100" fill="#0F0E1A"/>
+  <path d="M256 64L96 164v128c0 97.3 74.9 187.7 160 208 85.1-20.3 160-110.7 160-208V164L256 64z" fill="none" stroke="url(#shield-grad)" stroke-width="14"/>
+  <path d="M256 155l32.8 66.5 73.4 10.7-53.1 51.8 12.5 73L256 324.4l-65.6 32.6 12.5-73-53.1-51.8 73.4-10.7L256 155z" fill="url(#star-grad)"/>
+</svg>

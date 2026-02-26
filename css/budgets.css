@@ -1,0 +1,313 @@
+/* ============================================
+   BUDGETS PAGE
+   ============================================ */
+
+.budgets-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-6);
+}
+
+.budget-month-selector {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.budget-month-selector span {
+    font-size: var(--fs-md);
+    font-weight: 600;
+    min-width: 160px;
+    text-align: center;
+}
+
+/* ---- Budget Overview Bar ---- */
+.budget-overview {
+    margin-bottom: var(--space-6);
+}
+
+.budget-overview-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+}
+
+.budget-totals {
+    font-size: var(--fs-md);
+    font-weight: 600;
+}
+
+.budget-spent {
+    color: var(--text-primary);
+}
+
+.budget-separator {
+    color: var(--text-tertiary);
+    margin: 0 var(--space-1);
+}
+
+.budget-limit {
+    color: var(--text-tertiary);
+}
+
+.budget-progress-bar {
+    height: 10px;
+    background: var(--bg-input);
+    border-radius: var(--radius-full);
+    overflow: hidden;
+}
+
+.budget-progress-fill {
+    height: 100%;
+    border-radius: var(--radius-full);
+    background: var(--gradient-primary);
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.budget-progress-fill.warning {
+    background: linear-gradient(90deg, var(--warning), #f39c12);
+}
+
+.budget-progress-fill.danger {
+    background: linear-gradient(90deg, var(--danger), #e17055);
+}
+
+/* ---- Budget Category Cards ---- */
+.budget-categories-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-4);
+}
+
+.budget-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.budget-card-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: var(--space-4);
+}
+
+.budget-card-title {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+}
+
+.budget-card-emoji {
+    font-size: var(--fs-lg);
+}
+
+.budget-card-name {
+    font-weight: 600;
+    font-size: var(--fs-base);
+}
+
+.budget-card-percentage {
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    padding: var(--space-1) var(--space-3);
+    border-radius: var(--radius-full);
+}
+
+.budget-card-percentage.ok {
+    color: var(--success);
+    background: var(--success-subtle);
+}
+
+.budget-card-percentage.warn {
+    color: var(--warning);
+    background: var(--warning-subtle);
+}
+
+.budget-card-percentage.over {
+    color: var(--danger);
+    background: var(--danger-subtle);
+}
+
+.budget-card-amounts {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: var(--space-3);
+    font-size: var(--fs-sm);
+}
+
+.budget-card-spent {
+    font-weight: 600;
+}
+
+.budget-card-limit {
+    color: var(--text-tertiary);
+}
+
+.budget-card-bar {
+    height: 6px;
+    background: var(--bg-input);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.budget-card-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.budget-card-actions {
+    display: flex;
+    gap: var(--space-1);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.budget-card:hover .budget-card-actions {
+    opacity: 1;
+}
+
+/* ---- New budget category card ---- */
+.budget-category-card {
+    position: relative;
+}
+
+.budget-cat-header {
+    display: flex;
+    align-items: center;
+    gap: var(--space-3);
+    margin-bottom: var(--space-3);
+}
+
+.budget-cat-icon {
+    width: 36px;
+    height: 36px;
+    border-radius: var(--radius-md);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 18px;
+    flex-shrink: 0;
+}
+
+.budget-cat-name {
+    font-weight: 600;
+    font-size: var(--fs-base);
+    flex: 1;
+}
+
+.budget-cat-actions {
+    display: flex;
+    gap: var(--space-1);
+    opacity: 0;
+    transition: opacity var(--transition-fast);
+}
+
+.budget-category-card:hover .budget-cat-actions {
+    opacity: 1;
+}
+
+.budget-cat-amounts {
+    display: flex;
+    align-items: baseline;
+    gap: var(--space-1);
+    margin-bottom: var(--space-3);
+    font-size: var(--fs-sm);
+}
+
+.budget-cat-amounts .budget-spent {
+    font-weight: 700;
+    font-size: var(--fs-md);
+}
+
+.budget-cat-amounts .budget-sep {
+    color: var(--text-tertiary);
+}
+
+.budget-cat-amounts .budget-limit {
+    color: var(--text-tertiary);
+}
+
+.budget-bar {
+    height: 8px;
+    background: var(--bg-input);
+    border-radius: 4px;
+    overflow: hidden;
+    margin-bottom: var(--space-2);
+}
+
+.budget-bar-fill {
+    height: 100%;
+    border-radius: 4px;
+    transition: width 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.budget-bar-fill.over {
+    background: var(--danger) !important;
+}
+
+.budget-remaining {
+    font-size: var(--fs-xs);
+    color: var(--text-tertiary);
+}
+
+.budget-remaining.over {
+    color: var(--danger);
+    font-weight: 500;
+}
+
+/* ---- Dashboard budget bars ---- */
+.dashboard-budget-bars {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3);
+}
+
+.dash-budget-row {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-1);
+}
+
+.dash-budget-info {
+    display: flex;
+    justify-content: space-between;
+    font-size: var(--fs-sm);
+}
+
+.dash-budget-amounts {
+    color: var(--text-tertiary);
+    font-size: var(--fs-xs);
+}
+
+.dash-budget-bar {
+    height: 6px;
+    background: var(--bg-input);
+    border-radius: 3px;
+    overflow: hidden;
+}
+
+.dash-budget-bar-fill {
+    height: 100%;
+    border-radius: 3px;
+    transition: width 0.5s ease;
+}
+
+.dash-budget-bar-fill.over {
+    background: var(--danger) !important;
+}
+
+@media (max-width: 768px) {
+    .budgets-header {
+        flex-direction: column;
+        gap: var(--space-4);
+        align-items: stretch;
+    }
+
+    .budget-month-selector {
+        justify-content: center;
+    }
+}

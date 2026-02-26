@@ -1,0 +1,1199 @@
+<!DOCTYPE html>
+<html lang="es" data-theme="dark">
+
+<head>
+    <meta charset="UTF-8">
+    <!-- viewport set below after PWA meta tags -->
+    <meta name="description"
+        content="Budget Hero — Tu héroe de finanzas personales con IA. Registro rápido, presupuestos y consejos inteligentes.">
+    <title>Budget Hero — Finanzas Personales</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300;400;500;600;700&family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" href="css/variables.css">
+    <link rel="stylesheet" href="css/base.css">
+    <link rel="stylesheet" href="css/layout.css">
+    <link rel="stylesheet" href="css/components.css">
+    <link rel="stylesheet" href="css/dashboard.css">
+    <link rel="stylesheet" href="css/transactions.css">
+    <link rel="stylesheet" href="css/budgets.css">
+    <link rel="stylesheet" href="css/goals.css">
+    <link rel="stylesheet" href="css/modal.css">
+    <link rel="stylesheet" href="css/animations.css">
+    <link rel="stylesheet" href="css/onboarding.css">
+    <link rel="stylesheet" href="css/mascot.css">
+    <link rel="stylesheet" href="css/calendar.css">
+    <link rel="stylesheet" href="css/banners.css">
+    <link rel="stylesheet" href="css/mobile.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#0F0E1A">
+    <!-- iOS PWA Meta Tags -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Budget Hero">
+    <link rel="apple-touch-icon" href="icons/icon-192.svg">
+    <!-- Prevent zoom on input focus (iOS) -->
+    <meta name="viewport"
+        content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+</head>
+
+<body>
+    <!-- App Shell -->
+    <div id="app" class="app-shell">
+        <!-- Sidebar -->
+        <aside id="sidebar" class="sidebar">
+            <div class="sidebar-header">
+                <div class="logo">
+                    <div class="logo-icon">
+                        <svg width="28" height="28" viewBox="0 0 28 28" fill="none">
+                            <path d="M14 2L3 8v8c0 6.08 4.69 11.73 11 13 6.31-1.27 11-6.92 11-13V8L14 2z"
+                                stroke="url(#logo-grad)" stroke-width="2" fill="none" />
+                            <path
+                                d="M14 9l1.76 3.57 3.94.57-2.85 2.78.67 3.93L14 18l-3.52 1.85.67-3.93-2.85-2.78 3.94-.57L14 9z"
+                                fill="url(#logo-grad)" />
+                            <defs>
+                                <linearGradient id="logo-grad" x1="0" y1="0" x2="28" y2="28">
+                                    <stop stop-color="#A78BFA" />
+                                    <stop offset="1" stop-color="#67E8F9" />
+                                </linearGradient>
+                            </defs>
+                        </svg>
+                    </div>
+                    <span class="logo-text">Budget Hero</span>
+                </div>
+            </div>
+            <nav class="sidebar-nav">
+                <button class="nav-item active" data-page="dashboard" id="nav-dashboard">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                        <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                        <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                    </svg>
+                    <span>Inicio</span>
+                </button>
+                <button class="nav-item" data-page="transactions" id="nav-transactions">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="12" y1="1" x2="12" y2="23" />
+                        <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                    </svg>
+                    <span>Transacciones</span>
+                </button>
+                <button class="nav-item" data-page="budgets" id="nav-budgets">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12a9 9 0 1 1-9-9" />
+                        <path d="M21 3v9h-9" />
+                    </svg>
+                    <span>Presupuestos</span>
+                </button>
+                <button class="nav-item" data-page="goals" id="nav-goals">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <circle cx="12" cy="12" r="6" />
+                        <circle cx="12" cy="12" r="2" />
+                    </svg>
+                    <span>Objetivos</span>
+                </button>
+                <button class="nav-item" data-page="calendar" id="nav-calendar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                        <line x1="16" y1="2" x2="16" y2="6" />
+                        <line x1="8" y1="2" x2="8" y2="6" />
+                        <line x1="3" y1="10" x2="21" y2="10" />
+                    </svg>
+                    <span>Calendario</span>
+                </button>
+            </nav>
+            <div class="sidebar-footer">
+                <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
+                    <svg class="icon-sun" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="5" />
+                        <line x1="12" y1="1" x2="12" y2="3" />
+                        <line x1="12" y1="21" x2="12" y2="23" />
+                        <line x1="4.22" y1="4.22" x2="5.64" y2="5.64" />
+                        <line x1="18.36" y1="18.36" x2="19.78" y2="19.78" />
+                        <line x1="1" y1="12" x2="3" y2="12" />
+                        <line x1="21" y1="12" x2="23" y2="12" />
+                        <line x1="4.22" y1="19.78" x2="5.64" y2="18.36" />
+                        <line x1="18.36" y1="5.64" x2="19.78" y2="4.22" />
+                    </svg>
+                    <svg class="icon-moon" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z" />
+                    </svg>
+                </button>
+                <button class="btn-reset-app" id="btn-reset-app" title="Reiniciar la app y borrar todos los datos">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="1 4 1 10 7 10" />
+                        <path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10" />
+                    </svg>
+                    <span>Reiniciar</span>
+                </button>
+            </div>
+        </aside>
+
+        <!-- Sidebar Overlay (mobile) -->
+        <div class="sidebar-overlay" id="sidebar-overlay"></div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Top Bar -->
+            <header class="top-bar">
+                <button class="menu-toggle" id="menu-toggle" aria-label="Abrir menú">
+                    <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <div class="top-bar-title">
+                    <h1 id="page-title">Inicio</h1>
+                    <span class="top-bar-date" id="current-date"></span>
+                </div>
+                <button class="btn-primary btn-add-transaction" id="btn-add-transaction">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+                        stroke-linecap="round">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    <span>Nueva Transacción</span>
+                </button>
+            </header>
+
+            <!-- Pages -->
+            <div class="page-container">
+                <!-- Dashboard Page -->
+                <div id="page-dashboard" class="page active">
+                    <div id="dashboard-tips-container" class="contextual-tips-grid"></div>
+                    <!-- Header: Mascot Greeting -->
+                    <div class="mascot-container" id="mascot-greeting">
+                        <svg class="mascot-character" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <ellipse cx="50" cy="58" rx="28" ry="30" fill="#C4B5FD" stroke="#A78BFA" stroke-width="2" />
+                            <circle cx="50" cy="48" r="22" fill="#FDE68A" stroke="#FBBF24" stroke-width="1.5" />
+                            <g class="mascot-eyes">
+                                <circle cx="42" cy="45" r="4" fill="#1E1B4B" />
+                                <circle cx="58" cy="45" r="4" fill="#1E1B4B" />
+                                <circle cx="43" cy="43" r="1.5" fill="white" />
+                                <circle cx="59" cy="43" r="1.5" fill="white" />
+                            </g>
+                            <path d="M44 54 Q50 59 56 54" stroke="#1E1B4B" stroke-width="1.5" fill="none"
+                                stroke-linecap="round" />
+                            <circle cx="36" cy="52" r="3" fill="#FCA5A5" opacity="0.6" />
+                            <circle cx="64" cy="52" r="3" fill="#FCA5A5" opacity="0.6" />
+                            <g transform="translate(12, 55) scale(0.4)">
+                                <path d="M14 2L3 8v8c0 6.08 4.69 11.73 11 13 6.31-1.27 11-6.92 11-13V8L14 2z"
+                                    fill="#67E8F9" stroke="#22D3EE" stroke-width="2" />
+                                <path d="M14 8l1.5 3 3.3.5-2.4 2.3.6 3.3L14 15.5l-3 1.6.6-3.3-2.4-2.3 3.3-.5L14 8z"
+                                    fill="#FDE68A" />
+                            </g>
+                            <path d="M25 50 Q20 70 30 85" stroke="#A78BFA" stroke-width="3" fill="none"
+                                stroke-linecap="round" opacity="0.7" />
+                            <path d="M75 50 Q80 70 70 85" stroke="#A78BFA" stroke-width="3" fill="none"
+                                stroke-linecap="round" opacity="0.7" />
+                            <path d="M38 30 L42 22 L46 28 L50 18 L54 28 L58 22 L62 30" fill="#FBBF24" stroke="#F59E0B"
+                                stroke-width="1" />
+                            <text x="82" y="25" font-size="10" opacity="0.7">✦</text>
+                            <text x="15" y="20" font-size="7" opacity="0.5">✦</text>
+                        </svg>
+                        <div class="mascot-speech">
+                            <div class="mascot-greeting" id="mascot-name">¡Hola, mamá! 💪</div>
+                            <div class="mascot-message" id="mascot-msg">Tu tranquilidad financiera empieza acá.
+                                gastos para subir de nivel!</div>
+                            <div class="mascot-xp" id="mascot-xp">
+                                <span class="mascot-xp-label">Nivel 1</span>
+                                <div class="mascot-xp-bar">
+                                    <div class="mascot-xp-fill" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Ebook Banner: Dashboard -->
+                    <a href="#ebook" class="ebook-banner" id="ebook-banner-dashboard" data-banner-id="dashboard">
+                        <span class="ebook-banner-icon">📖</span>
+                        <div class="ebook-banner-content">
+                            <div class="ebook-banner-title">30 Días para Recuperar tu Plata</div>
+                            <div class="ebook-banner-text">La guía práctica para madres que están cansadas de hacer
+                                magia a fin de mes.</div>
+                            <div class="ebook-banner-cta">Conocer más</div>
+                        </div>
+                        <button class="ebook-banner-close"
+                            onclick="event.preventDefault(); event.stopPropagation(); App.dismissBanner('dashboard')"
+                            aria-label="Cerrar">×</button>
+                    </a>
+
+                    <!-- Global Period Selector -->
+                    <div class="period-selector-global" id="period-selector">
+                        <button class="period-btn" data-period="day">Día</button>
+                        <button class="period-btn" data-period="week">Semana</button>
+                        <button class="period-btn active" data-period="month">Mes</button>
+                        <button class="period-btn" data-period="year">Año</button>
+                    </div>
+
+                    <!-- Summary Cards Row 1: Balance + Operational + Income + Expenses -->
+                    <div class="summary-cards">
+                        <div class="card summary-card card-balance">
+                            <div class="card-label">Balance Total</div>
+                            <div class="card-value" id="total-balance">$0.00</div>
+                            <div class="card-trend" id="balance-trend"></div>
+                        </div>
+                        <div class="card summary-card card-operational">
+                            <div class="card-label">Saldo Operativo</div>
+                            <div class="card-value" id="operational-balance">$0.00</div>
+                            <div class="card-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                                    <line x1="2" y1="10" x2="22" y2="10" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="card summary-card card-income">
+                            <div class="card-label" id="income-label">Ingresos del Mes</div>
+                            <div class="card-value" id="monthly-income">$0.00</div>
+                            <div class="card-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="23 6 13.5 15.5 8.5 10.5 1 18" />
+                                    <polyline points="17 6 23 6 23 12" />
+                                </svg>
+                            </div>
+                        </div>
+                        <div class="card summary-card card-expense">
+                            <div class="card-label" id="expense-label">Gastos del Mes</div>
+                            <div class="card-value" id="monthly-expenses">$0.00</div>
+                            <div class="card-icon">
+                                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="23 18 13.5 8.5 8.5 13.5 1 6" />
+                                    <polyline points="17 18 23 18 23 12" />
+                                </svg>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Summary Cards Row 2: Financial Health Metrics -->
+                    <div class="metric-cards">
+                        <div class="card metric-card">
+                            <div class="metric-header">
+                                <span class="metric-emoji">🏦</span>
+                                <span class="metric-label" id="savings-label">Ahorro del Mes</span>
+                            </div>
+                            <div class="metric-value" id="monthly-savings-amount">$0.00</div>
+                            <div class="metric-sub" id="monthly-savings-pct">0% de ingresos</div>
+                        </div>
+                        <div class="card metric-card">
+                            <div class="metric-header">
+                                <span class="metric-emoji">📊</span>
+                                <span class="metric-label">Ingresos vs Gastos</span>
+                            </div>
+                            <div class="metric-dual-bar" id="income-vs-expenses-bar">
+                                <div class="dual-bar-row">
+                                    <span class="dual-bar-label">Ingresos</span>
+                                    <div class="dual-bar-track">
+                                        <div class="dual-bar-fill income-fill" id="income-bar-fill" style="width: 0%">
+                                        </div>
+                                    </div>
+                                    <span class="dual-bar-value" id="income-bar-value">$0</span>
+                                </div>
+                                <div class="dual-bar-row">
+                                    <span class="dual-bar-label">Gastos</span>
+                                    <div class="dual-bar-track">
+                                        <div class="dual-bar-fill expense-fill" id="expense-bar-fill" style="width: 0%">
+                                        </div>
+                                    </div>
+                                    <span class="dual-bar-value" id="expense-bar-value">$0</span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="card metric-card">
+                            <div class="metric-header">
+                                <span class="metric-emoji">🎯</span>
+                                <span class="metric-label">Presupuesto Usado</span>
+                            </div>
+                            <div class="metric-gauge" id="budget-gauge">
+                                <svg viewBox="0 0 120 75" class="gauge-svg">
+                                    <path d="M10 70 A50 50 0 0 1 110 70" fill="none" stroke="var(--bg-input)"
+                                        stroke-width="10" stroke-linecap="round" />
+                                    <path d="M10 70 A50 50 0 0 1 110 70" fill="none" stroke="var(--accent)"
+                                        stroke-width="10" stroke-linecap="round" id="gauge-fill" stroke-dasharray="157"
+                                        stroke-dashoffset="157" />
+                                </svg>
+                                <div class="gauge-value" id="gauge-value">0%</div>
+                            </div>
+                        </div>
+                        <div class="card metric-card">
+                            <div class="metric-header">
+                                <span class="metric-emoji">💎</span>
+                                <span class="metric-label">Tasa de Ahorro</span>
+                            </div>
+                            <div class="metric-donut" id="savings-rate-donut">
+                                <svg viewBox="0 0 80 80" class="donut-svg">
+                                    <circle cx="40" cy="40" r="32" fill="none" stroke="var(--bg-input)"
+                                        stroke-width="8" />
+                                    <circle cx="40" cy="40" r="32" fill="none" stroke="var(--success)" stroke-width="8"
+                                        stroke-linecap="round" id="donut-fill" stroke-dasharray="201"
+                                        stroke-dashoffset="201" transform="rotate(-90 40 40)" />
+                                </svg>
+                                <div class="donut-value" id="donut-value">0%</div>
+                            </div>
+                            <div id="savings-warning" class="savings-warning"></div>
+                        </div>
+                    </div>
+
+                    <!-- Pie Charts Row -->
+                    <div class="pie-charts-row">
+                        <div class="card pie-chart-card">
+                            <div class="card-header">
+                                <h3>🟢 Ingresos por Categoría</h3>
+                            </div>
+                            <div class="pie-chart-container">
+                                <canvas id="income-pie-canvas"></canvas>
+                            </div>
+                            <div class="pie-legend" id="income-pie-legend"></div>
+                        </div>
+                        <div class="card pie-chart-card">
+                            <div class="card-header">
+                                <h3>🔴 Gastos por Categoría</h3>
+                            </div>
+                            <div class="pie-chart-container">
+                                <canvas id="expense-pie-canvas"></canvas>
+                            </div>
+                            <div class="pie-legend" id="expense-pie-legend"></div>
+                        </div>
+                    </div>
+
+                    <div class="dashboard-grid">
+                        <div class="card chart-card">
+                            <div class="card-header">
+                                <h3>Resumen de Gastos</h3>
+                            </div>
+                            <div class="chart-container" id="spending-chart">
+                                <canvas id="spending-canvas"></canvas>
+                            </div>
+                        </div>
+                        <div class="card category-breakdown-card">
+                            <div class="card-header">
+                                <h3>Por Categoría</h3>
+                            </div>
+                            <div id="category-breakdown" class="category-breakdown">
+                                <div class="empty-state-small">Sin datos aún</div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Budget by Category Overview -->
+                    <div class="card budget-overview-card" id="dashboard-budget-overview" style="display:none;">
+                        <div class="card-header">
+                            <h3>📋 Presupuesto por Categoría</h3>
+                        </div>
+                        <div id="dashboard-budget-bars" class="dashboard-budget-bars"></div>
+                    </div>
+
+                    <!-- Dashboard Goals Widget -->
+                    <div class="card dashboard-goals-card" id="dashboard-goals-widget" style="display:none;">
+                        <div class="card-header">
+                            <h3>🎯 Objetivos Financieros</h3>
+                            <button class="btn-ghost" id="btn-view-goals">Ver Todos</button>
+                        </div>
+                        <div id="dashboard-goals-list" class="dashboard-goals-list"></div>
+                    </div>
+
+                    <!-- Dashboard Due Payments Widget -->
+                    <div class="card dashboard-dues-card" id="dashboard-dues-widget" style="display:none;">
+                        <div class="card-header">
+                            <h3>📅 Vencimientos Próximos</h3>
+                            <button class="btn-ghost" id="btn-view-calendar">Ver Calendario</button>
+                        </div>
+                        <div id="dashboard-dues-list" class="due-alerts-container"></div>
+                    </div>
+
+
+
+                    <div class="card recent-transactions-card">
+                        <div class="card-header">
+                            <h3>Transacciones Recientes</h3>
+                            <button class="btn-ghost" id="btn-view-all">Ver Todas</button>
+                        </div>
+                        <div id="recent-transactions" class="transaction-list">
+                            <div class="empty-mascot">
+                                <svg class="mascot-character" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                                    <ellipse cx="50" cy="60" rx="24" ry="25" fill="#C4B5FD" stroke="#A78BFA"
+                                        stroke-width="2" />
+                                    <circle cx="50" cy="50" r="18" fill="#FDE68A" stroke="#FBBF24" stroke-width="1.5" />
+                                    <circle cx="44" cy="48" r="3" fill="#1E1B4B" />
+                                    <circle cx="56" cy="48" r="3" fill="#1E1B4B" />
+                                    <circle cx="45" cy="46.5" r="1" fill="white" />
+                                    <circle cx="57" cy="46.5" r="1" fill="white" />
+                                    <ellipse cx="50" cy="55" rx="4" ry="3" fill="#1E1B4B" />
+                                    <ellipse cx="50" cy="54.5" rx="2.5" ry="1.5" fill="#FCA5A5" />
+                                    <text x="72" y="35" font-size="14">❓</text>
+                                </svg>
+                                <p>¡Tu aventura recién empieza!</p>
+                                <span>Hacé click en "Nueva Transacción" para tu primer registro</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Transactions Page -->
+                <section id="page-transactions" class="page">
+                    <div class="transactions-toolbar">
+                        <div class="search-bar">
+                            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <circle cx="11" cy="11" r="8" />
+                                <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                            </svg>
+                            <input type="text" id="search-transactions" placeholder="Buscar transacciones..."
+                                autocomplete="off">
+                        </div>
+                        <div class="filter-group">
+                            <button class="btn-secondary btn-export" id="btn-export" title="Exportar a Excel">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                                    <polyline points="7 10 12 15 17 10" />
+                                    <line x1="12" y1="15" x2="12" y2="3" />
+                                </svg>
+                                Exportar
+                            </button>
+                            <select id="filter-category" class="filter-select">
+                                <option value="">Todas las Categorías</option>
+                            </select>
+                            <select id="filter-type" class="filter-select">
+                                <option value="">Todos los Tipos</option>
+                                <option value="expense">Gastos</option>
+                                <option value="income">Ingresos</option>
+                                <option value="savings">Ahorros</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div id="all-transactions" class="transaction-list full-list">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="2" y="5" width="20" height="14" rx="2" />
+                                    <line x1="2" y1="10" x2="22" y2="10" />
+                                </svg>
+                            </div>
+                            <p>No se encontraron transacciones</p>
+                            <span>Agrega tu primera transacción para verla aquí</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Budgets Page -->
+                <section id="page-budgets" class="page">
+                    <!-- Ebook Banner: Budgets -->
+                    <a href="#ebook" class="ebook-banner ebook-banner--budgets" id="ebook-banner-budgets"
+                        data-banner-id="budgets">
+                        <span class="ebook-banner-icon">🧠</span>
+                        <div class="ebook-banner-content">
+                            <div class="ebook-banner-title">Hacked el supermercado — Cap. 5</div>
+                            <div class="ebook-banner-text">3 trucos para bajar tu changuito un 30% sin resignar calidad.
+                            </div>
+                            <div class="ebook-banner-cta">Leer en el libro</div>
+                        </div>
+                        <button class="ebook-banner-close"
+                            onclick="event.preventDefault(); event.stopPropagation(); App.dismissBanner('budgets')"
+                            aria-label="Cerrar">×</button>
+                    </a>
+                    <div id="budget-tips-container" class="contextual-tips-grid"></div>
+                    <div class="budgets-header">
+                        <div class="budget-month-selector">
+                            <button id="prev-month" class="btn-icon" aria-label="Mes anterior">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 18 9 12 15 6" />
+                                </svg>
+                            </button>
+                            <span id="budget-month-label">Febrero 2026</span>
+                            <button id="next-month" class="btn-icon" aria-label="Mes siguiente">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="budget-smart-actions">
+                            <button class="btn-copy-budget" id="btn-copy-budget"
+                                title="Copiar presupuesto al mes siguiente">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <rect x="9" y="9" width="13" height="13" rx="2" ry="2" />
+                                    <path d="M5 15H4a2 2 0 0 1-2-2V4a2 2 0 0 1 2-2h9a2 2 0 0 1 2 2v1" />
+                                </svg>
+                                Copiar al Siguiente
+                            </button>
+                            <button class="btn-ai-budget" id="btn-ai-budget" title="Generar presupuesto con IA">
+                                🤖 Generar con IA
+                            </button>
+                            <button class="btn-secondary" id="btn-add-budget">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                                Fijar Presupuesto
+                            </button>
+                        </div>
+                    </div>
+                    <div class="budget-overview card">
+                        <div class="budget-overview-header">
+                            <h3>Resumen Mensual</h3>
+                            <div class="budget-totals">
+                                <span class="budget-spent" id="budget-total-spent">$0</span>
+                                <span class="budget-separator">/</span>
+                                <span class="budget-limit" id="budget-total-limit">$0</span>
+                            </div>
+                        </div>
+                        <div class="budget-progress-bar">
+                            <div class="budget-progress-fill" id="budget-total-progress" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    <div id="budget-categories" class="budget-categories-grid">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M21 12a9 9 0 1 1-9-9" />
+                                    <path d="M21 3v9h-9" />
+                                </svg>
+                            </div>
+                            <p>Sin presupuestos definidos</p>
+                            <span>Haz clic en "Fijar Presupuesto" para definir límites de gasto</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Goals Page -->
+                <section id="page-goals" class="page">
+                    <div id="goal-tips-container" class="contextual-tips-grid"></div>
+                    <div class="goals-header">
+                        <h2 style="margin: 0; font-size: var(--fs-lg); font-weight: 700;">Mis Objetivos Financieros
+                        </h2>
+                        <button class="btn-primary" id="btn-add-goal">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                stroke-width="2.5" stroke-linecap="round">
+                                <line x1="12" y1="5" x2="12" y2="19" />
+                                <line x1="5" y1="12" x2="19" y2="12" />
+                            </svg>
+                            Nuevo Objetivo
+                        </button>
+                    </div>
+                    <div id="goals-list" class="goals-grid">
+                        <div class="empty-state">
+                            <div class="empty-state-icon">
+                                <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round">
+                                    <circle cx="12" cy="12" r="10" />
+                                    <circle cx="12" cy="12" r="6" />
+                                    <circle cx="12" cy="12" r="2" />
+                                </svg>
+                            </div>
+                            <p>Sin objetivos definidos</p>
+                            <span>Creá tu primer objetivo de ahorro o gasto para empezar a planificar.</span>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Calendar Page -->
+                <section id="page-calendar" class="page">
+                    <!-- Ebook Banner: Calendar -->
+                    <a href="#ebook" class="ebook-banner ebook-banner--calendar" id="ebook-banner-calendar"
+                        data-banner-id="calendar">
+                        <span class="ebook-banner-icon">🧛</span>
+                        <div class="ebook-banner-content">
+                            <div class="ebook-banner-title">Cazá tus vampiros financieros — Cap. 2</div>
+                            <div class="ebook-banner-text">Las suscripciones fantasma que te roban plata todos los
+                                meses.</div>
+                            <div class="ebook-banner-cta">Leer en el libro</div>
+                        </div>
+                        <button class="ebook-banner-close"
+                            onclick="event.preventDefault(); event.stopPropagation(); App.dismissBanner('calendar')"
+                            aria-label="Cerrar">×</button>
+                    </a>
+                    <div class="calendar-header">
+                        <div class="calendar-month-nav">
+                            <button id="cal-prev-month" class="btn-icon" aria-label="Mes anterior">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="15 18 9 12 15 6" />
+                                </svg>
+                            </button>
+                            <span id="cal-month-label">Febrero 2026</span>
+                            <button id="cal-next-month" class="btn-icon" aria-label="Mes siguiente">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6" />
+                                </svg>
+                            </button>
+                        </div>
+                        <div class="calendar-actions">
+                            <button class="btn-primary" id="btn-add-due">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                                    stroke-width="2.5" stroke-linecap="round">
+                                    <line x1="12" y1="5" x2="12" y2="19" />
+                                    <line x1="5" y1="12" x2="19" y2="12" />
+                                </svg>
+                                Nuevo Vencimiento
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="calendar-grid-wrapper card">
+                        <div id="calendar-grid"></div>
+                    </div>
+
+                    <div class="calendar-filters">
+                        <select id="cal-filter-status" class="filter-select">
+                            <option value="">Todos los estados</option>
+                            <option value="overdue">🔴 Vencidos</option>
+                            <option value="upcoming">🟡 Próximos</option>
+                            <option value="pending">⏳ Pendientes</option>
+                            <option value="paid">🟢 Pagados</option>
+                        </select>
+                    </div>
+
+                    <h3 style="margin: 0 0 var(--space-3); font-weight: 700;">📋 Vencimientos del Mes</h3>
+                    <div id="due-payments-list" class="due-payments-list"></div>
+                </section>
+            </div>
+        </main>
+    </div>
+
+    <!-- Mobile Bottom Navigation -->
+    <nav class="mobile-nav" id="mobile-nav">
+        <div class="mobile-nav-inner">
+            <button class="mobile-nav-btn active" data-page="dashboard" id="mnav-dashboard">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="3" width="7" height="7" rx="1.5" />
+                    <rect x="3" y="14" width="7" height="7" rx="1.5" />
+                    <rect x="14" y="14" width="7" height="7" rx="1.5" />
+                </svg>
+                <span>Inicio</span>
+            </button>
+            <button class="mobile-nav-btn" data-page="transactions" id="mnav-transactions">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="12" y1="1" x2="12" y2="23" />
+                    <path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                <span>Movimientos</span>
+            </button>
+            <button class="mobile-nav-btn" data-page="budgets" id="mnav-budgets">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M21 12a9 9 0 1 1-9-9" />
+                    <path d="M21 3v9h-9" />
+                </svg>
+                <span>Presupuesto</span>
+            </button>
+            <button class="mobile-nav-btn" data-page="goals" id="mnav-goals">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="12" cy="12" r="10" />
+                    <circle cx="12" cy="12" r="6" />
+                    <circle cx="12" cy="12" r="2" />
+                </svg>
+                <span>Objetivos</span>
+            </button>
+            <button class="mobile-nav-btn" data-page="calendar" id="mnav-calendar">
+                <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="4" width="18" height="18" rx="2" ry="2" />
+                    <line x1="16" y1="2" x2="16" y2="6" />
+                    <line x1="8" y1="2" x2="8" y2="6" />
+                    <line x1="3" y1="10" x2="21" y2="10" />
+                </svg>
+                <span>Calendario</span>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Mobile FAB -->
+    <button class="mobile-fab" id="mobile-fab" aria-label="Nueva Transacción">
+        <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
+            stroke-linecap="round">
+            <line x1="12" y1="5" x2="12" y2="19" />
+            <line x1="5" y1="12" x2="19" y2="12" />
+        </svg>
+    </button>
+
+    <!-- Transaction Modal -->
+    <div class="modal-overlay" id="transaction-modal">
+        <div class="modal" role="dialog" aria-labelledby="modal-title">
+            <div class="modal-header">
+                <h2 id="modal-title">Nueva Transacción</h2>
+                <button class="modal-close" id="modal-close" aria-label="Cerrar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <form id="transaction-form" autocomplete="off">
+                <div class="form-type-toggle">
+                    <button type="button" class="type-btn active" data-type="expense" id="type-expense">Gasto</button>
+                    <button type="button" class="type-btn" data-type="income" id="type-income">Ingreso</button>
+                    <button type="button" class="type-btn" data-type="savings" id="type-savings">Ahorro</button>
+                </div>
+                <div class="form-amount-row">
+                    <span class="currency-symbol">$</span>
+                    <input type="number" id="tx-amount" class="amount-input" placeholder="0.00" step="0.01" min="0"
+                        required autofocus>
+                </div>
+                <div class="form-group">
+                    <label for="tx-description">Descripción</label>
+                    <input type="text" id="tx-description" placeholder="ej. Café, Supermercado, Salario..." required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="tx-category">Categoría</label>
+                        <select id="tx-category" required>
+                            <option value="">Seleccionar...</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="tx-date">Fecha</label>
+                        <input type="date" id="tx-date" required>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="tx-notes">Notas <span class="optional">(opcional)</span></label>
+                    <input type="text" id="tx-notes" placeholder="Notas adicionales...">
+                </div>
+                <div class="ai-suggestion" id="ai-suggestion" style="display:none;">
+                    <div class="ai-badge">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2" stroke-linecap="round">
+                            <path d="M12 2L2 7l10 5 10-5-10-5z" />
+                            <path d="M2 17l10 5 10-5" />
+                            <path d="M2 12l10 5 10-5" />
+                        </svg>
+                        🤖 Categorizado por IA
+                    </div>
+                    <span id="ai-category-suggestion"></span>
+                    <button type="button" class="btn-apply-ai" id="btn-apply-ai">✓</button>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-ghost" id="btn-cancel">Cancelar</button>
+                    <button type="submit" class="btn-primary" id="btn-save">
+                        <span>Guardar Transacción</span>
+                        <kbd>⌘ Enter</kbd>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Budget Modal -->
+    <div class="modal-overlay" id="budget-modal">
+        <div class="modal modal-sm" role="dialog" aria-labelledby="budget-modal-title">
+            <div class="modal-header">
+                <h2 id="budget-modal-title">Fijar Presupuesto</h2>
+                <button class="modal-close" id="budget-modal-close" aria-label="Cerrar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <form id="budget-form" autocomplete="off">
+                <div class="form-group">
+                    <label for="budget-category">Categoría</label>
+                    <select id="budget-category" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="budget-amount">Límite Mensual</label>
+                    <div class="form-amount-row compact">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" id="budget-amount" class="amount-input" placeholder="0.00" step="0.01"
+                            min="0" required>
+                    </div>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-ghost" id="budget-cancel">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar Presupuesto</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Goal Modal -->
+    <div class="modal-overlay" id="goal-modal">
+        <div class="modal" role="dialog" aria-labelledby="goal-modal-title">
+            <div class="modal-header">
+                <h2 id="goal-modal-title">Nuevo Objetivo</h2>
+                <button class="modal-close" id="goal-modal-close" aria-label="Cerrar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <form id="goal-form" autocomplete="off">
+                <div class="form-group">
+                    <label for="goal-name">Nombre del objetivo</label>
+                    <input type="text" id="goal-name" placeholder="ej. Viaje a Europa, Fondo de emergencia..." required>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="goal-type">Tipo</label>
+                        <select id="goal-type" required>
+                            <option value="savings">🏦 Ahorro</option>
+                            <option value="spending">📉 Límite de gasto</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="goal-linked-category">Categoría vinculada <span
+                                class="optional">(opcional)</span></label>
+                        <select id="goal-linked-category">
+                            <option value="">Ninguna</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="goal-target">Monto objetivo</label>
+                        <div class="form-amount-row compact">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" id="goal-target" class="amount-input" placeholder="0.00" step="0.01"
+                                min="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="goal-current">Monto actual <span class="optional">(opcional)</span></label>
+                        <div class="form-amount-row compact">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" id="goal-current" class="amount-input" placeholder="0.00" step="0.01"
+                                min="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="goal-deadline">Fecha límite</label>
+                    <input type="date" id="goal-deadline" required>
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-ghost" id="goal-cancel">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar Objetivo</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- AI Budget Modal -->
+    <div class="modal-overlay" id="ai-budget-modal">
+        <div class="modal modal-lg" role="dialog" aria-labelledby="ai-budget-modal-title">
+            <div class="modal-header">
+                <h2 id="ai-budget-modal-title">🤖 Presupuesto Inteligente</h2>
+                <button class="modal-close" id="ai-budget-modal-close" aria-label="Cerrar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="ai-budget-tabs" id="ai-budget-tabs">
+                <button class="ai-budget-tab active" data-ai-type="pattern">📊 Basado en Patrones</button>
+                <button class="ai-budget-tab" data-ai-type="goals">🎯 Basado en Objetivos</button>
+                <button class="ai-budget-tab" data-ai-type="combined">🤖 Combinado</button>
+            </div>
+            <div id="ai-budget-content" class="ai-budget-result">
+                <div class="empty-state-small">Generando presupuesto...</div>
+            </div>
+            <div class="ai-budget-actions" id="ai-budget-actions" style="display:none;">
+                <button type="button" class="btn-ghost" id="ai-budget-cancel">Cancelar</button>
+                <button type="button" class="btn-primary" id="ai-budget-apply">✓ Aplicar Presupuesto</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Onboarding Overlay -->
+    <div class="onboarding-overlay" id="onboarding">
+        <div class="onboarding-container">
+            <div class="onboarding-dots">
+                <div class="onboarding-dot active" data-step="0"></div>
+                <div class="onboarding-dot" data-step="1"></div>
+                <div class="onboarding-dot" data-step="2"></div>
+            </div>
+
+            <div class="onboarding-step active" data-step="0">
+                <div class="onboarding-logo">
+                    <svg width="44" height="44" viewBox="0 0 28 28" fill="none">
+                        <path d="M14 2L3 8v8c0 6.08 4.69 11.73 11 13 6.31-1.27 11-6.92 11-13V8L14 2z" stroke="white"
+                            stroke-width="2" fill="none" />
+                        <path
+                            d="M14 9l1.76 3.57 3.94.57-2.85 2.78.67 3.93L14 18l-3.52 1.85.67-3.93-2.85-2.78 3.94-.57L14 9z"
+                            fill="white" />
+                    </svg>
+                </div>
+                <h2 class="onboarding-title">¡Bienvenida! 💪</h2>
+                <p class="onboarding-subtitle">Soy <strong>Budget Hero</strong>, tu aliada financiera.
+                    Diseñada para que la plata deje de ser una preocupación.<br><br>Registrá todo en segundos
+                    mientras los chicos duermen.</p>
+                <div class="onboarding-theme-pick">
+                    <span class="onboarding-theme-label">Elegí tu tema:</span>
+                    <div class="onboarding-theme-btns">
+                        <button type="button" class="onb-theme-btn" data-theme="dark"
+                            onclick="App.setOnboardingTheme('dark')">
+                            🌙 Oscuro
+                        </button>
+                        <button type="button" class="onb-theme-btn active" data-theme="light"
+                            onclick="App.setOnboardingTheme('light')">
+                            ☀️ Claro
+                        </button>
+                    </div>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="onboarding-btn primary" onclick="App.onboardingNext()">Siguiente →</button>
+                </div>
+            </div>
+
+            <div class="onboarding-step" data-step="1">
+                <h2 class="onboarding-title">¿Cómo funciona?</h2>
+                <p class="onboarding-subtitle">Tres pasos simples para manejar tu plata:</p>
+                <div class="onboarding-features">
+                    <div class="onboarding-feature">
+                        <div class="onboarding-feature-icon"
+                            style="background: rgba(167,139,250,0.15); color: #A78BFA;">
+                            ⚡</div>
+                        <div class="onboarding-feature-text">
+                            <h4>Anotá cada gasto en 10 segundos</h4>
+                            <p>Desde el súper hasta el kiosco del colegio. Sin planillas ni complicaciones.</p>
+                        </div>
+                    </div>
+                    <div class="onboarding-feature">
+                        <div class="onboarding-feature-icon"
+                            style="background: rgba(103,232,249,0.15); color: #67E8F9;">
+                            📊</div>
+                        <div class="onboarding-feature-text">
+                            <h4>Controlá tus presupuestos</h4>
+                            <p>Fijá límites por categoría y sabé cuánto te queda para llegar a fin de mes tranquila.</p>
+                        </div>
+                    </div>
+                    <div class="onboarding-feature">
+                        <div class="onboarding-feature-icon"
+                            style="background: rgba(110,231,183,0.15); color: #6EE7B7;">✨
+                        </div>
+                        <div class="onboarding-feature-text">
+                            <h4>Recibí tips prácticos de mamá a mamá</h4>
+                            <p>Consejos reales para que sobre plata a fin de mes sin dejar de darles lo mejor a tus
+                                hijos.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="onboarding-btn ghost" onclick="App.onboardingPrev()">← Atrás</button>
+                    <button class="onboarding-btn primary" onclick="App.onboardingNext()">Siguiente →</button>
+                </div>
+            </div>
+
+            <div class="onboarding-step" data-step="2">
+                <h2 class="onboarding-title">Personalizá tu experiencia</h2>
+                <p class="onboarding-subtitle">Contanos un poco sobre vos para personalizar la app.</p>
+                <div class="onboarding-form">
+                    <div class="form-group">
+                        <label for="onb-name">¿Cómo te llamás?</label>
+                        <input type="text" id="onb-name" placeholder="Tu nombre" autocomplete="off">
+                    </div>
+                    <div class="form-group">
+                        <label for="onb-currency">Moneda preferida</label>
+                        <select id="onb-currency">
+                            <option value="USD">🇺🇸 USD — Dólar Estadounidense</option>
+                            <option value="ARS">🇦🇷 ARS — Peso Argentino</option>
+                            <option value="EUR">🇪🇺 EUR — Euro</option>
+                            <option value="MXN">🇲🇽 MXN — Peso Mexicano</option>
+                            <option value="COP">🇨🇴 COP — Peso Colombiano</option>
+                            <option value="CLP">🇨🇱 CLP — Peso Chileno</option>
+                            <option value="PEN">🇵🇪 PEN — Sol Peruano</option>
+                            <option value="BRL">🇧🇷 BRL — Real Brasileño</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label for="onb-balance">¿Con cuánto arrancás?</label>
+                        <input type="number" id="onb-balance" placeholder="0.00" min="0" step="0.01" autocomplete="off">
+                    </div>
+                </div>
+                <div class="onboarding-actions">
+                    <button class="onboarding-btn ghost" onclick="App.onboardingPrev()">← Atrás</button>
+                    <button class="onboarding-btn primary" onclick="App.finishOnboarding()">¡Empezar! 🚀</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Category Manager Modal -->
+    <div class="modal-overlay" id="category-modal">
+        <div class="modal" role="dialog">
+            <div class="modal-header">
+                <h2>Mis Categorías</h2>
+                <button class="modal-close" id="category-modal-close">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="category-manager-content">
+                <div class="custom-cat-list" id="custom-cat-list">
+                    <!-- List of custom categories -->
+                </div>
+                <hr style="margin: var(--space-4) 0; border: 0; border-top: 1px solid var(--border-color);">
+                <h3>Nueva Categoría</h3>
+                <form id="category-form">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Nombre</label>
+                            <input type="text" id="cat-name" required placeholder="ej. Hobby" maxlength="20">
+                        </div>
+                        <div class="form-group" style="flex: 0 0 80px;">
+                            <label>Emoji</label>
+                            <input type="text" id="cat-emoji" required placeholder="🎨" style="text-align:center;"
+                                maxlength="2">
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label>Tipo</label>
+                            <select id="cat-type">
+                                <option value="expense">Gasto</option>
+                                <option value="income">Ingreso</option>
+                                <option value="savings">Ahorro</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Color</label>
+                            <div class="color-picker-wrapper">
+                                <input type="color" id="cat-color" value="#a78bfa">
+                            </div>
+                        </div>
+                    </div>
+                    <button type="submit" class="btn-primary" style="width:100%">Crear Categoría</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Due Payment Modal -->
+    <div class="modal-overlay" id="due-payment-modal">
+        <div class="modal" role="dialog" aria-labelledby="due-modal-title">
+            <div class="modal-header">
+                <h2 id="due-modal-title">Nuevo Vencimiento</h2>
+                <button class="modal-close" id="due-modal-close" aria-label="Cerrar">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <form id="due-payment-form" autocomplete="off">
+                <div class="form-group">
+                    <label for="due-name">Nombre del servicio</label>
+                    <input type="text" id="due-name" placeholder="ej. Luz, Gas, Alquiler, Tarjeta..." required>
+                </div>
+                <div class="form-group">
+                    <label>Ícono</label>
+                    <div class="icon-picker-grid" id="due-icon-picker">
+                        <button type="button" class="icon-picker-btn selected" data-icon="📄">📄</button>
+                        <button type="button" class="icon-picker-btn" data-icon="💡">💡</button>
+                        <button type="button" class="icon-picker-btn" data-icon="🔥">🔥</button>
+                        <button type="button" class="icon-picker-btn" data-icon="💧">💧</button>
+                        <button type="button" class="icon-picker-btn" data-icon="🏠">🏠</button>
+                        <button type="button" class="icon-picker-btn" data-icon="🌐">🌐</button>
+                        <button type="button" class="icon-picker-btn" data-icon="📱">📱</button>
+                        <button type="button" class="icon-picker-btn" data-icon="💳">💳</button>
+                        <button type="button" class="icon-picker-btn" data-icon="📺">📺</button>
+                        <button type="button" class="icon-picker-btn" data-icon="🎵">🎵</button>
+                        <button type="button" class="icon-picker-btn" data-icon="🛡️">🛡️</button>
+                        <button type="button" class="icon-picker-btn" data-icon="🏋️">🏋️</button>
+                        <button type="button" class="icon-picker-btn" data-icon="📚">📚</button>
+                        <button type="button" class="icon-picker-btn" data-icon="🏥">🏥</button>
+                        <button type="button" class="icon-picker-btn" data-icon="🏛️">🏛️</button>
+                    </div>
+                    <input type="hidden" id="due-icon" value="📄">
+                </div>
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="due-day">Día de vencimiento</label>
+                        <input type="number" id="due-day" min="1" max="31" placeholder="15" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="due-amount">Monto estimado <span class="optional">(opcional)</span></label>
+                        <div class="form-amount-row compact">
+                            <span class="currency-symbol">$</span>
+                            <input type="number" id="due-amount" class="amount-input" placeholder="0.00" step="0.01"
+                                min="0">
+                        </div>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="due-category">Categoría del gasto</label>
+                    <select id="due-category" required></select>
+                </div>
+                <div class="form-group">
+                    <label for="due-notes">Notas <span class="optional">(opcional)</span></label>
+                    <input type="text" id="due-notes" placeholder="Notas adicionales...">
+                </div>
+                <div class="form-actions">
+                    <button type="button" class="btn-ghost" id="due-cancel">Cancelar</button>
+                    <button type="submit" class="btn-primary">Guardar Vencimiento</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/store.js"></script>
+    <script src="js/categories.js"></script>
+    <script src="js/chart.js"></script>
+    <script src="js/ai.js"></script>
+    <script src="js/calendar.js"></script>
+    <script src="js/app.js"></script>
+
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then((reg) => console.log('SW registered:', reg.scope))
+                    .catch((err) => console.warn('SW registration failed:', err));
+            });
+        }
+
+        // Handle manifest shortcut action
+        if (window.location.search.includes('action=new-transaction')) {
+            window.addEventListener('load', () => {
+                setTimeout(() => {
+                    const btn = document.getElementById('btn-add-transaction') || document.getElementById('mobile-fab');
+                    if (btn) btn.click();
+                }, 500);
+            });
+        }
+    </script>
+</body>
+
+</html>
