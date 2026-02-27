@@ -1108,13 +1108,49 @@ window.App = (() => {
         CalendarModule.renderDashboardWidget('dashboard-dues-list');
     }
 
-    function openDuePaymentModal(dp = null) {
+    let dueModalDate = null; // { day, month, year } set when opening from calendar
+
+    function openDuePaymentModal(dp = null, day = null, month = null, year = null) {
         editingDue = dp ? dp.id : null;
         $('#due-modal-title').textContent = dp ? 'Editar Vencimiento' : 'Nuevo Vencimiento';
         $('#due-name').value = dp ? dp.name : '';
-        $('#due-day').value = dp ? dp.dueDay : '';
         $('#due-amount').value = dp ? (dp.amount || '') : '';
         $('#due-notes').value = dp ? (dp.notes || '') : '';
+
+        // Determine the date to use
+        if (dp) {
+            // Editing: use existing date
+            dueModalDate = {
+                day: dp.dueDay,
+                month: dp.dueMonth !== undefined ? dp.dueMonth : CalendarModule.getMonth(),
+                year: dp.dueYear !== undefined ? dp.dueYear : CalendarModule.getYear(),
+            };
+        } else if (day !== null && month !== null && year !== null) {
+            // Creating from calendar click
+            dueModalDate = { day, month, year };
+        } else {
+            // Fallback: use current calendar view month, day 1
+            dueModalDate = {
+                day: 1,
+                month: CalendarModule.getMonth(),
+                year: CalendarModule.getYear(),
+            };
+        }
+
+        // Display the selected date
+        const dateDisplay = $('#due-date-display');
+        if (dateDisplay) {
+            const d = new Date(dueModalDate.year, dueModalDate.month, dueModalDate.day);
+            const formatted = d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
+            dateDisplay.textContent = '📅 ' + formatted.charAt(0).toUpperCase() + formatted.slice(1);
+        }
+
+        // Set recurring checkbox
+        const recurringCb = $('#due-recurring');
+        if (recurringCb) {
+            recurringCb.checked = dp ? !!dp.recurring : false;
+        }
+
         // Set icon
         const icon = dp ? (dp.icon || '📄') : '📄';
         $('#due-icon').value = icon;
@@ -1146,7 +1182,10 @@ window.App = (() => {
         const dpData = {
             name: $('#due-name').value.trim(),
             icon: $('#due-icon').value || '📄',
-            dueDay: parseInt($('#due-day').value) || 1,
+            dueDay: dueModalDate ? dueModalDate.day : 1,
+            dueMonth: dueModalDate ? dueModalDate.month : CalendarModule.getMonth(),
+            dueYear: dueModalDate ? dueModalDate.year : CalendarModule.getYear(),
+            recurring: $('#due-recurring') ? $('#due-recurring').checked : false,
             amount: parseFloat($('#due-amount').value) || null,
             category: $('#due-category').value,
             notes: $('#due-notes').value.trim(),

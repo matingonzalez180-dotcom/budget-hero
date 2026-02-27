@@ -35,6 +35,16 @@ const Store = (() => {
             }
             // Ensure duePayments array exists (migration)
             if (!parsed.duePayments) parsed.duePayments = [];
+            // Migrate old duePayments without dueMonth/dueYear → treat as recurring
+            parsed.duePayments.forEach(dp => {
+                if (dp.dueMonth === undefined || dp.dueYear === undefined) {
+                    dp.recurring = true;
+                }
+                if (dp.recurrence && dp.recurring === undefined) {
+                    dp.recurring = true;
+                    delete dp.recurrence;
+                }
+            });
             return { ...defaultData(), ...parsed, budgets: parsed.budgets || {}, duePayments: parsed.duePayments || [] };
         } catch {
             return defaultData();
@@ -365,7 +375,7 @@ const Store = (() => {
             dp.id = (typeof crypto !== 'undefined' && crypto.randomUUID) ? crypto.randomUUID() : Date.now().toString(36) + Math.random().toString(36).slice(2);
             dp.createdAt = new Date().toISOString();
             dp.payments = dp.payments || {};
-            dp.recurrence = dp.recurrence || 'monthly';
+            dp.recurring = dp.recurring || false;
             if (!data.duePayments) data.duePayments = [];
             data.duePayments.push(dp);
             save(data);
@@ -392,6 +402,13 @@ const Store = (() => {
 
         getDuePayments() {
             return [...(data.duePayments || [])];
+        },
+
+        getDuePaymentsForMonth(year, month) {
+            return (data.duePayments || []).filter(dp => {
+                if (dp.recurring) return true;
+                return dp.dueMonth === month && dp.dueYear === year;
+            });
         },
 
         markDuePaid(id, year, month, paidAmount) {
@@ -438,6 +455,10 @@ const Store = (() => {
         },
 
         getDuePaymentStatus(dp, year, month) {
+            // Non-recurring payments outside their target month are not shown
+            if (!dp.recurring && (dp.dueMonth !== month || dp.dueYear !== year)) {
+                return 'hidden';
+            }
             const key = monthKey(year, month);
             if (dp.payments && dp.payments[key]) return 'paid';
             const now = new Date();
@@ -701,6 +722,9 @@ const Store = (() => {
                 name: 'Alquiler',
                 icon: '🏠',
                 dueDay: 1,
+                dueMonth: month,
+                dueYear: year,
+                recurring: true,
                 amount: 1400,
                 category: 'housing',
                 notes: 'Alquiler mensual del departamento',
@@ -710,6 +734,9 @@ const Store = (() => {
                 name: 'Factura de Luz',
                 icon: '💡',
                 dueDay: 11,
+                dueMonth: month,
+                dueYear: year,
+                recurring: true,
                 amount: 95,
                 category: 'bills',
                 notes: '',
@@ -719,6 +746,9 @@ const Store = (() => {
                 name: 'Cuota Colegio',
                 icon: '📚',
                 dueDay: 7,
+                dueMonth: month,
+                dueYear: year,
+                recurring: true,
                 amount: 350,
                 category: 'kids',
                 notes: 'Cuota mensual del colegio',
@@ -727,6 +757,9 @@ const Store = (() => {
                 name: 'Factura de Internet',
                 icon: '🌐',
                 dueDay: 18,
+                dueMonth: month,
+                dueYear: year,
+                recurring: true,
                 amount: 59.99,
                 category: 'bills',
                 notes: 'Vital para tarea de los chicos',
@@ -735,6 +768,9 @@ const Store = (() => {
                 name: 'Netflix',
                 icon: '📺',
                 dueDay: 5,
+                dueMonth: month,
+                dueYear: year,
+                recurring: true,
                 amount: 15.99,
                 category: 'entertainment',
                 notes: 'Plan para los chicos',
@@ -743,6 +779,9 @@ const Store = (() => {
                 name: 'Gas',
                 icon: '🔥',
                 dueDay: 20,
+                dueMonth: month,
+                dueYear: year,
+                recurring: true,
                 amount: 45,
                 category: 'bills',
                 notes: '',
@@ -751,6 +790,9 @@ const Store = (() => {
                 name: 'Obra Social',
                 icon: '🏥',
                 dueDay: 10,
+                dueMonth: month,
+                dueYear: year,
+                recurring: true,
                 amount: 120,
                 category: 'bills',
                 notes: 'Cobertura familiar',

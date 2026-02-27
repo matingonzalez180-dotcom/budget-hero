@@ -75,7 +75,7 @@ const CalendarModule = (() => {
         const container = document.getElementById(containerId);
         if (!container) return;
 
-        const duePayments = Store.getDuePayments();
+        const duePayments = Store.getDuePaymentsForMonth(calYear, calMonth);
         const firstDay = new Date(calYear, calMonth, 1);
         const lastDay = new Date(calYear, calMonth + 1, 0);
         const daysInMonth = lastDay.getDate();
@@ -101,17 +101,19 @@ const CalendarModule = (() => {
         for (let day = 1; day <= daysInMonth; day++) {
             const isToday = isCurrentMonth && day === todayDate;
             const duesForDay = duePayments.filter(dp => dp.dueDay === day);
-            let dayClass = 'calendar-day';
+            let dayClass = 'calendar-day clickable';
             if (isToday) dayClass += ' today';
 
-            html += `<div class="${dayClass}" data-day="${day}">`;
+            html += `<div class="${dayClass}" data-day="${day}" data-month="${calMonth}" data-year="${calYear}">`;
             html += `<span class="calendar-day-number">${day}</span>`;
 
             if (duesForDay.length > 0) {
                 html += '<div class="calendar-day-icons">';
                 duesForDay.forEach(dp => {
                     const status = Store.getDuePaymentStatus(dp, calYear, calMonth);
-                    html += `<span class="calendar-due-icon due-status-${status}" title="${dp.name} — ${status === 'paid' ? 'Pagado' : status === 'overdue' ? 'Vencido' : status === 'upcoming' ? 'Próximo' : 'Pendiente'}" data-id="${dp.id}">${dp.icon || '📄'}</span>`;
+                    if (status !== 'hidden') {
+                        html += `<span class="calendar-due-icon due-status-${status}" title="${dp.name} — ${status === 'paid' ? 'Pagado' : status === 'overdue' ? 'Vencido' : status === 'upcoming' ? 'Próximo' : 'Pendiente'}" data-id="${dp.id}">${dp.icon || '📄'}</span>`;
+                    }
                 });
                 html += '</div>';
             }
@@ -121,20 +123,34 @@ const CalendarModule = (() => {
 
         html += '</div>';
         container.innerHTML = html;
+
+        // Add click handlers on day cells to create new due payment
+        container.querySelectorAll('.calendar-day.clickable').forEach(cell => {
+            cell.addEventListener('click', (e) => {
+                // Don't trigger if clicking on an existing due icon
+                if (e.target.closest('.calendar-due-icon')) return;
+                const day = parseInt(cell.dataset.day);
+                const month = parseInt(cell.dataset.month);
+                const year = parseInt(cell.dataset.year);
+                if (typeof App !== 'undefined' && App.openDuePaymentModal) {
+                    App.openDuePaymentModal(null, day, month, year);
+                }
+            });
+        });
     }
 
     function renderDuePaymentsList(containerId, options = {}) {
         const container = document.getElementById(containerId);
         if (!container) return;
 
-        const duePayments = Store.getDuePayments();
+        const duePayments = Store.getDuePaymentsForMonth(calYear, calMonth);
         const filterStatus = options.filterStatus || '';
         const filterName = options.filterName || '';
 
         let filtered = duePayments.map(dp => ({
             ...dp,
             status: Store.getDuePaymentStatus(dp, calYear, calMonth),
-        }));
+        })).filter(dp => dp.status !== 'hidden');
 
         if (filterStatus) {
             filtered = filtered.filter(dp => dp.status === filterStatus);
@@ -166,7 +182,7 @@ const CalendarModule = (() => {
                             <span class="due-card-icon">${dp.icon || '📄'}</span>
                             <div>
                                 <div class="due-card-name">${dp.name}</div>
-                                <div class="due-card-meta">${cat.emoji} ${cat.name} · Día ${dp.dueDay}</div>
+                                <div class="due-card-meta">${cat.emoji} ${cat.name} · Día ${dp.dueDay}${dp.recurring ? ' · 🔄 Recurrente' : ''}</div>
                             </div>
                         </div>
                         <div class="due-card-right">
@@ -239,7 +255,7 @@ const CalendarModule = (() => {
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth();
-        const duePayments = Store.getDuePayments();
+        const duePayments = Store.getDuePaymentsForMonth(year, month);
 
         // Get upcoming and overdue payments for current month
         const alerts = duePayments

@@ -456,6 +456,67 @@
     box-shadow: 0 0 8px color-mix(in srgb, var(--accent) 30%, transparent);
 }
 
+/* ---- Clickable Calendar Days ---- */
+.calendar-day.clickable {
+    cursor: pointer;
+    transition: all 0.2s ease;
+}
+
+.calendar-day.clickable:hover:not(.empty) {
+    background: color-mix(in srgb, var(--accent) 12%, var(--bg-input));
+    border-color: color-mix(in srgb, var(--accent) 30%, transparent);
+    transform: translateY(-1px);
+    box-shadow: 0 2px 8px color-mix(in srgb, var(--accent) 15%, transparent);
+}
+
+/* ---- Date Display in Modal ---- */
+.due-date-display {
+    padding: var(--space-3);
+    background: color-mix(in srgb, var(--accent) 8%, var(--bg-input));
+    border: 1px solid color-mix(in srgb, var(--accent) 25%, var(--border-color));
+    border-radius: var(--radius-md);
+    font-size: var(--fs-sm);
+    font-weight: 600;
+    color: var(--text-primary);
+    text-transform: capitalize;
+}
+
+/* ---- Recurring Checkbox ---- */
+.checkbox-label {
+    display: flex;
+    align-items: center;
+    gap: var(--space-2);
+    cursor: pointer;
+    padding: var(--space-2) var(--space-3);
+    border-radius: var(--radius-md);
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
+    transition: all 0.2s ease;
+    font-size: var(--fs-sm);
+}
+
+.checkbox-label:hover {
+    border-color: var(--accent);
+    background: color-mix(in srgb, var(--accent) 6%, var(--bg-input));
+}
+
+.checkbox-label input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: var(--accent);
+    cursor: pointer;
+    flex-shrink: 0;
+}
+
+.checkbox-label span {
+    color: var(--text-secondary);
+}
+
+.checkbox-label input[type="checkbox"]:checked + span {
+    color: var(--text-primary);
+    font-weight: 500;
+}
+
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
     .calendar-day {

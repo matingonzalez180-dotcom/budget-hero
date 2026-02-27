@@ -1113,6 +1113,16 @@
                     <input type="text" id="due-name" placeholder="ej. Luz, Gas, Alquiler, Tarjeta..." required>
                 </div>
                 <div class="form-group">
+                    <label>Fecha seleccionada</label>
+                    <div class="due-date-display" id="due-date-display">📅 —</div>
+                </div>
+                <div class="form-group">
+                    <label class="checkbox-label" for="due-recurring">
+                        <input type="checkbox" id="due-recurring">
+                        <span>🔄 Repetir todos los meses (recurrente)</span>
+                    </label>
+                </div>
+                <div class="form-group">
                     <label>Ícono</label>
                     <div class="icon-picker-grid" id="due-icon-picker">
                         <button type="button" class="icon-picker-btn selected" data-icon="📄">📄</button>
@@ -1133,18 +1143,12 @@
                     </div>
                     <input type="hidden" id="due-icon" value="📄">
                 </div>
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="due-day">Día de vencimiento</label>
-                        <input type="number" id="due-day" min="1" max="31" placeholder="15" required>
-                    </div>
-                    <div class="form-group">
-                        <label for="due-amount">Monto estimado <span class="optional">(opcional)</span></label>
-                        <div class="form-amount-row compact">
-                            <span class="currency-symbol">$</span>
-                            <input type="number" id="due-amount" class="amount-input" placeholder="0.00" step="0.01"
-                                min="0">
-                        </div>
+                <div class="form-group">
+                    <label for="due-amount">Monto estimado <span class="optional">(opcional)</span></label>
+                    <div class="form-amount-row compact">
+                        <span class="currency-symbol">$</span>
+                        <input type="number" id="due-amount" class="amount-input" placeholder="0.00" step="0.01"
+                            min="0">
                     </div>
                 </div>
                 <div class="form-group">
