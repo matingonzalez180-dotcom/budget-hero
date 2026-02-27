@@ -1108,7 +1108,6 @@ window.App = (() => {
         CalendarModule.renderDashboardWidget('dashboard-dues-list');
     }
 
-    let dueModalDate = null; // { day, month, year } set when opening from calendar
 
     function openDuePaymentModal(dp = null, day = null, month = null, year = null) {
         editingDue = dp ? dp.id : null;
@@ -1117,32 +1116,19 @@ window.App = (() => {
         $('#due-amount').value = dp ? (dp.amount || '') : '';
         $('#due-notes').value = dp ? (dp.notes || '') : '';
 
-        // Determine the date to use
+        // Determine the date and set the date input
+        const dateInput = $('#due-date');
         if (dp) {
             // Editing: use existing date
-            dueModalDate = {
-                day: dp.dueDay,
-                month: dp.dueMonth !== undefined ? dp.dueMonth : CalendarModule.getMonth(),
-                year: dp.dueYear !== undefined ? dp.dueYear : CalendarModule.getYear(),
-            };
+            const m = dp.dueMonth !== undefined ? dp.dueMonth : CalendarModule.getMonth();
+            const y = dp.dueYear !== undefined ? dp.dueYear : CalendarModule.getYear();
+            dateInput.value = `${y}-${String(m + 1).padStart(2, '0')}-${String(dp.dueDay).padStart(2, '0')}`;
         } else if (day !== null && month !== null && year !== null) {
             // Creating from calendar click
-            dueModalDate = { day, month, year };
+            dateInput.value = `${year}-${String(month + 1).padStart(2, '0')}-${String(day).padStart(2, '0')}`;
         } else {
-            // Fallback: use current calendar view month, day 1
-            dueModalDate = {
-                day: 1,
-                month: CalendarModule.getMonth(),
-                year: CalendarModule.getYear(),
-            };
-        }
-
-        // Display the selected date
-        const dateDisplay = $('#due-date-display');
-        if (dateDisplay) {
-            const d = new Date(dueModalDate.year, dueModalDate.month, dueModalDate.day);
-            const formatted = d.toLocaleDateString('es-ES', { weekday: 'long', day: 'numeric', month: 'long', year: 'numeric' });
-            dateDisplay.textContent = '📅 ' + formatted.charAt(0).toUpperCase() + formatted.slice(1);
+            // Fallback: today's date
+            dateInput.value = new Date().toISOString().split('T')[0];
         }
 
         // Set recurring checkbox
@@ -1179,12 +1165,15 @@ window.App = (() => {
 
     function handleDuePaymentSubmit(e) {
         e.preventDefault();
+        // Parse date from the date input
+        const dateVal = $('#due-date').value;
+        const parsedDate = dateVal ? new Date(dateVal + 'T12:00:00') : new Date();
         const dpData = {
             name: $('#due-name').value.trim(),
             icon: $('#due-icon').value || '📄',
-            dueDay: dueModalDate ? dueModalDate.day : 1,
-            dueMonth: dueModalDate ? dueModalDate.month : CalendarModule.getMonth(),
-            dueYear: dueModalDate ? dueModalDate.year : CalendarModule.getYear(),
+            dueDay: parsedDate.getDate(),
+            dueMonth: parsedDate.getMonth(),
+            dueYear: parsedDate.getFullYear(),
             recurring: $('#due-recurring') ? $('#due-recurring').checked : false,
             amount: parseFloat($('#due-amount').value) || null,
             category: $('#due-category').value,
