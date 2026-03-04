@@ -151,6 +151,17 @@ window.App = (() => {
         // View all transactions
         safeBind('#btn-view-all', 'click', () => navigateTo('transactions'));
 
+        // Tip Banner — close & link
+        safeBind('#tip-banner-close', 'click', () => {
+            _dashboardBannerDismissed = true;
+            const banner = $('#dashboard-tip-banner');
+            if (banner) banner.style.display = 'none';
+        });
+        safeBind('#tip-banner-link', 'click', (e) => {
+            e.preventDefault();
+            navigateTo('tips');
+        });
+
         // Period selector
         $$('#period-selector .period-btn').forEach(btn => {
             btn.addEventListener('click', () => {
@@ -197,13 +208,14 @@ window.App = (() => {
         $$('.mobile-nav-btn').forEach(n => n.classList.remove('active'));
         const mobileBtn = $(`.mobile-nav-btn[data-page="${page}"]`);
         if (mobileBtn) mobileBtn.classList.add('active');
-        const titles = { dashboard: 'Inicio', transactions: 'Transacciones', budgets: 'Presupuestos', goals: 'Objetivos', calendar: 'Calendario' };
+        const titles = { dashboard: 'Inicio', transactions: 'Transacciones', budgets: 'Presupuestos', goals: 'Objetivos', calendar: 'Calendario', tips: 'Tips IA' };
         $('#page-title').textContent = titles[page] || page;
         if (page === 'transactions') renderAllTransactions();
         if (page === 'dashboard') renderDashboard();
         if (page === 'budgets') renderBudgets();
         if (page === 'goals') renderGoals();
         if (page === 'calendar') renderCalendar();
+        if (page === 'tips') renderTipsPage();
         // Close sidebar and overlay on mobile
         $('#sidebar').classList.remove('open');
         const overlay = $('#sidebar-overlay');
@@ -418,8 +430,8 @@ window.App = (() => {
         Chart.animatePie('expense-pie-canvas', expenseChartData, { donut: true });
         Chart.animatePie('income-pie-canvas', incomeChartData, { donut: true });
 
-        // Tips
-        renderContextualTips('dashboard');
+        // Tips — single banner
+        renderDashboardBanner();
         renderPieLegend('expense-pie-legend', expenseChartData);
         renderPieLegend('income-pie-legend', incomeChartData);
     }
@@ -486,29 +498,64 @@ window.App = (() => {
         }).join('');
     }
 
-    function renderContextualTips(section) {
-        const container = $(`#${section}-tips-container`);
-        if (!container) return;
+    // ---- DASHBOARD TIP BANNER (single, dismissable) ----
+    let _cachedAllTips = null;
+    let _dashboardBannerIdx = 0;
+    let _dashboardBannerDismissed = false;
 
-        const allTips = AI.generateContextualTips();
-        const tips = allTips[section] || [];
+    function renderDashboardBanner() {
+        _cachedAllTips = AI.generateContextualTips();
+        const tips = _cachedAllTips.dashboard || [];
+        const banner = $('#dashboard-tip-banner');
+        if (!banner) return;
 
-        container.innerHTML = '';
-
-        if (tips.length === 0) {
-            container.style.display = 'none';
+        if (tips.length === 0 || _dashboardBannerDismissed) {
+            banner.style.display = 'none';
             return;
         }
 
+        _dashboardBannerIdx = _dashboardBannerIdx % tips.length;
+        const tip = tips[_dashboardBannerIdx];
+
+        $('#tip-banner-emoji').textContent = tip.emoji;
+        $('#tip-banner-text').textContent = tip.text;
+        banner.className = `tip-banner tip-banner--${tip.type}`;
+        banner.style.display = '';
+    }
+
+    function renderContextualTips(section) {
+        const container = $(`#${section}-tips-container`);
+        if (!container) return;
+        if (!_cachedAllTips) _cachedAllTips = AI.generateContextualTips();
+        const tips = _cachedAllTips[section] || [];
+        container.innerHTML = '';
+        if (tips.length === 0) { container.style.display = 'none'; return; }
         container.style.display = 'grid';
         tips.forEach(tip => {
             const el = document.createElement('div');
             el.className = `contextual-tip ${tip.type}`;
-            el.innerHTML = `
-                <span class="contextual-tip-emoji">${tip.emoji}</span>
-                <span>${tip.text}</span>
-            `;
+            el.innerHTML = `<span class="contextual-tip-emoji">${tip.emoji}</span><span>${tip.text}</span>`;
             container.appendChild(el);
+        });
+    }
+
+    // ---- FULL TIPS PAGE ----
+    function renderTipsPage() {
+        if (!_cachedAllTips) _cachedAllTips = AI.generateContextualTips();
+        ['dashboard', 'budget', 'goals'].forEach(section => {
+            const container = $(`#tips-page-${section}`);
+            if (!container) return;
+            const tips = _cachedAllTips[section] || [];
+            if (tips.length === 0) {
+                container.innerHTML = '<p class="tips-empty">Sin tips en esta sección por ahora. ¡Seguí registrando!</p>';
+                return;
+            }
+            container.innerHTML = tips.map(tip => `
+                <div class="tip-card tip-card--${tip.type}">
+                    <span class="tip-card-emoji">${tip.emoji}</span>
+                    <p class="tip-card-text">${tip.text}</p>
+                </div>
+            `).join('');
         });
     }
 

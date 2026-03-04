@@ -84,148 +84,80 @@ const AI = (() => {
         return null;
     }
 
+
     /**
      * Generate contextual financial tips organized by section.
-     *
-     * Filosofía: Budget Hero funciona como una estratega financiera de élite.
-     * Regla de Oro: El dinero nunca duerme. Prohibido sugerir pagar antes del
-     * vencimiento — el capital debe rendir intereses hasta el último momento.
-     *
-     * Estructura de cada tip:
-     *   1. Análisis del Flujo  — qué detectamos
-     *   2. Estrategia de Rendimiento — qué hacer con el dinero
-     *   3. Concepto del Ebook — educación financiera
-     *   4. Misión Hero — acción concreta
+     * SIN NÚMEROS CONCRETOS — consejos cualitativos y estratégicos.
      */
     function generateContextualTips() {
-        const tips = {
-            dashboard: [],
-            budget: [],
-            goals: []
-        };
+        const tips = { dashboard: [], budget: [], goals: [] };
         const now = new Date();
         const year = now.getFullYear();
         const month = now.getMonth();
         const currentDay = now.getDate();
-        const daysInMonth = new Date(year, month + 1, 0).getDate();
         const totals = Store.getMonthlyTotals(year, month);
         const transactions = Store.getTransactions();
         const budgets = Store.getBudgets(year, month);
         const catTotals = Store.getCategoryTotals(year, month);
         const balance = Store.getTotalBalance();
 
-        // ---- Tasa de referencia simulada (TNA conservadora cuenta remunerada) ----
-        const ANNUAL_RATE = 0.45; // 45% TNA — cuenta remunerada promedio AR
-        const DAILY_RATE = ANNUAL_RATE / 365;
-
         if (transactions.length === 0) {
-            tips.dashboard.push({ emoji: '🧠', text: 'Cada centavo que registrás es un centavo que defendés. Anotá todo — incluso el kiosco del cole. "Si sale plata de tu bolsillo, tiene que quedar registrado" (Cap. 3).', type: 'info' });
-            tips.dashboard.push({ emoji: '💰', text: 'Mientras organizás tus finanzas, ¿tu plata está durmiendo en una cuenta corriente? Mové cualquier excedente a una cuenta remunerada hoy. El interés compuesto empieza desde el día 1.', type: 'info' });
+            tips.dashboard.push({ emoji: '🧠', text: 'Cada centavo que registrás es un centavo que defendés. Anotá todo — incluso el kiosco del cole. "Si sale plata de tu bolsillo, tiene que quedar registrado." (Cap. 3)', type: 'info' });
+            tips.dashboard.push({ emoji: '💰', text: '¿Tu plata está durmiendo en una cuenta corriente? Mové cualquier excedente a una cuenta remunerada hoy. El interés compuesto empieza desde el día 1.', type: 'info' });
             return tips;
         }
 
-        // =================================================================
-        //   DASHBOARD TIPS — ESTRATEGA FINANCIERA
-        // =================================================================
-
-        // ---- 1. DETECCIÓN DE DINERO OCIOSO (Costo de Oportunidad) ----
+        // ---- 1. DINERO OCIOSO ----
         if (balance.operational > 0) {
-            // Simular cuánto ganaría el saldo operativo en un mes
-            const monthlyInterest = balance.operational * DAILY_RATE * daysInMonth;
-            if (monthlyInterest > 0) {
-                // Convertir a algo tangible del ebook
-                let tangible = '';
-                if (monthlyInterest >= 50) tangible = `una salida con los chicos`;
-                else if (monthlyInterest >= 20) tangible = `las figuritas del mes`;
-                else if (monthlyInterest >= 10) tangible = `un café para vos`;
-                else tangible = `un gustito bien merecido`;
-
-                tips.dashboard.push({
-                    emoji: '💸',
-                    text: `Tenés ${formatTipCurrency(balance.operational)} en saldo operativo. Si estuviera en una cuenta remunerada, este mes te daría ~${formatTipCurrency(Math.round(monthlyInterest))} en intereses — alcanza para ${tangible}. ¿Tu plata está trabajando o durmiendo? (Cap. 7)`,
-                    type: 'warning'
-                });
-            }
+            tips.dashboard.push({ emoji: '💸', text: 'Tenés saldo operativo sin movimiento. Si estuviera en una cuenta remunerada, estaría generando intereses todos los días. ¿Tu plata está trabajando o durmiendo? (Cap. 7)', type: 'warning' });
         }
 
-        // ---- 2. ARBITRAJE DE VENCIMIENTOS (Regla de Oro: no pagar antes) ----
+        // ---- 2. ARBITRAJE DE VENCIMIENTOS ----
         const duePayments = Store.getDuePayments();
         if (duePayments.length > 0) {
             const upcoming = duePayments.filter(dp => {
                 const status = Store.getDuePaymentStatus(dp, year, month);
                 return status === 'upcoming' || status === 'pending';
             });
-
-            upcoming.forEach(dp => {
-                const daysUntilDue = dp.dueDay - currentDay;
-                if (daysUntilDue > 1 && dp.amount > 0) {
-                    const interestGain = dp.amount * DAILY_RATE * daysUntilDue;
-                    if (interestGain >= 1) {
-                        tips.dashboard.push({
-                            emoji: '🏦',
-                            text: `📋 ${dp.icon || '📄'} ${dp.name} vence el día ${dp.dueDay}. No lo pagues hoy. Mantené esos ${formatTipCurrency(dp.amount)} en tu cuenta remunerada ${daysUntilDue} días más y ganá ~${formatTipCurrency(Math.round(interestGain))} extra. Programá el pago para el día del vencimiento. (Cap. 7)`,
-                            type: 'info'
-                        });
-                    }
-                }
-            });
-
-            // Alerta si ya pagaron algo antes del vencimiento
+            const upcomingWithDays = upcoming.filter(dp => (dp.dueDay - currentDay) > 1 && dp.amount > 0);
+            if (upcomingWithDays.length > 0) {
+                const first = upcomingWithDays[0];
+                tips.dashboard.push({ emoji: '🏦', text: `${first.icon || '📄'} ${first.name} vence el día ${first.dueDay}. No lo pagues hoy — mantené ese dinero generando intereses en tu cuenta remunerada hasta el último momento. (Cap. 7)`, type: 'info' });
+            }
             const paidEarly = duePayments.filter(dp => {
                 const key = `${year}-${String(month + 1).padStart(2, '0')}`;
                 if (dp.payments && dp.payments[key]) {
                     const paidDate = new Date(dp.payments[key].paidDate + 'T12:00:00');
-                    return paidDate.getDate() < dp.dueDay - 2; // Pagó 3+ días antes
+                    return paidDate.getDate() < dp.dueDay - 2;
                 }
                 return false;
             });
-
             if (paidEarly.length > 0) {
-                const totalEarlyAmount = paidEarly.reduce((s, dp) => s + (dp.amount || 0), 0);
-                const avgDaysEarly = Math.round(paidEarly.reduce((s, dp) => {
-                    const key = `${year}-${String(month + 1).padStart(2, '0')}`;
-                    const paidDay = new Date(dp.payments[key].paidDate + 'T12:00:00').getDate();
-                    return s + (dp.dueDay - paidDay);
-                }, 0) / paidEarly.length);
-                const lostInterest = totalEarlyAmount * DAILY_RATE * avgDaysEarly;
-
-                if (lostInterest >= 1) {
-                    tips.dashboard.push({
-                        emoji: '⏳',
-                        text: `Pagaste ${paidEarly.length} servicio${paidEarly.length > 1 ? 's' : ''} un promedio de ${avgDaysEarly} días antes del vencimiento. Eso es ${formatTipCurrency(Math.round(lostInterest))} en intereses que dejaste sobre la mesa. Recordá: el dinero nunca duerme. (Cap. 7)`,
-                        type: 'warning'
-                    });
-                }
+                tips.dashboard.push({ emoji: '⏳', text: 'Pagaste algún servicio antes del vencimiento. Ese dinero podría haber estado rindiendo intereses esos días extra. Recordá: el dinero nunca duerme. (Cap. 7)', type: 'warning' });
             }
         }
 
-        // ---- 3. INGRESO ALTO A PRINCIPIO DE MES → Sugerir inversión ----
+        // ---- 3. EXCEDENTE TEMPRANO ----
         if (totals.income > 0 && currentDay <= 10) {
             const surplus = totals.income - totals.expenses;
             if (surplus > 0) {
-                const daysToInvest = daysInMonth - currentDay;
-                const potentialGain = surplus * DAILY_RATE * daysToInvest;
-                tips.dashboard.push({
-                    emoji: '🚀',
-                    text: `Detecté un excedente de ${formatTipCurrency(surplus)} temprano en el mes. Si colocás ese capital en un instrumento de liquidez inmediata hoy, podés generar ~${formatTipCurrency(Math.round(potentialGain))} este mes. El interés compuesto diario pone tu plata a trabajar las 24hs. (Cap. 7)`,
-                    type: 'success'
-                });
+                tips.dashboard.push({ emoji: '🚀', text: 'Detecté un excedente de ingresos temprano en el mes. Colocá ese capital en un instrumento de liquidez inmediata — el interés compuesto diario pone tu plata a trabajar las 24hs. (Cap. 7)', type: 'success' });
             }
         }
 
-        // ---- 4. TASA DE AHORRO + Estrategia ----
+        // ---- 4. TASA DE AHORRO ----
         if (totals.income > 0) {
             const savingsRate = (totals.net / totals.income) * 100;
             if (savingsRate >= 20) {
-                tips.dashboard.push({ emoji: '🏆', text: `¡Estás ahorrando el ${Math.round(savingsRate)}% de tus ingresos! Eso es nivel tesorera de empresa. Asegurate de que ese ahorro esté generando rendimiento, no durmiendo en la cuenta. 💪 (Cap. 7)`, type: 'success' });
+                tips.dashboard.push({ emoji: '🏆', text: '¡Tu tasa de ahorro es excelente! Eso es nivel tesorera de empresa. Asegurate de que ese ahorro esté generando rendimiento, no durmiendo en la cuenta. 💪 (Cap. 7)', type: 'success' });
             } else if (savingsRate < 0) {
-                tips.dashboard.push({ emoji: '💛', text: `Este mes el flujo quedó en rojo. No te castigues — es información, no un veredicto. Revisá los vencimientos que quedan: ¿podés postergar algún pago opcional hasta el próximo ingreso? (Cap. 1)`, type: 'danger' });
+                tips.dashboard.push({ emoji: '💛', text: 'Este mes el flujo quedó en rojo. No te castigues — es información, no un veredicto. ¿Podés postergar algún pago opcional hasta el próximo ingreso? (Cap. 1)', type: 'danger' });
             } else if (savingsRate < 10) {
-                tips.dashboard.push({ emoji: '🔍', text: `Tu tasa de ahorro es del ${Math.round(savingsRate)}%. Cada punto que subas es plata que trabaja para vos. ¿Ya calculaste tu "Sueldo Real"? Ingreso total menos gastos innegociables = tu verdadera base. (Cap. 1)`, type: 'info' });
+                tips.dashboard.push({ emoji: '🔍', text: 'Tu tasa de ahorro está baja. Cada punto que subas es plata que trabaja para vos. ¿Ya calculaste tu "Sueldo Real"? (Cap. 1)', type: 'info' });
             }
         }
 
-        // ---- 5. VAMPIROS FINANCIEROS (Cap. 2) — enhanced ----
+        // ---- 5. VAMPIROS FINANCIEROS ----
         const thisMonthTxs = transactions.filter(tx => {
             const d = new Date(tx.date + 'T12:00:00');
             return d.getFullYear() === year && d.getMonth() === month && tx.type === 'expense';
@@ -239,160 +171,82 @@ const AI = (() => {
         });
         for (const [desc, data] of Object.entries(descCounts)) {
             if (data.count >= 3 && data.total > 0) {
-                const yearlyLeak = data.total * 12;
-                const yearlyIfInvested = yearlyLeak * (1 + ANNUAL_RATE);
-                tips.dashboard.push({
-                    emoji: '🧛',
-                    text: `Vampiro financiero: "${desc}" × ${data.count} = ${formatTipCurrency(data.total)}/mes. Si redirigís esa plata a una cuenta remunerada, en un año tendrías ${formatTipCurrency(Math.round(yearlyIfInvested))} en vez de nada. ¿Es necesidad real o inercia? (Cap. 2)`,
-                    type: 'info'
-                });
+                tips.dashboard.push({ emoji: '🧛', text: `Vampiro financiero: "${desc}" aparece ${data.count} veces este mes. Si redirigís esa plata a una cuenta remunerada, en un año la diferencia se siente. ¿Es necesidad real o inercia? (Cap. 2)`, type: 'info' });
                 break;
             }
         }
 
-        // ---- 6. SEMÁFORO DE GASTOS DE HIJOS (Cap. 4) — enhanced ----
+        // ---- 6. SEMÁFORO HIJOS ----
         const kidsSpent = catTotals.find(ct => ct.category === 'kids');
-        if (kidsSpent && kidsSpent.amount > 0 && totals.expenses > 0) {
-            const kidsPct = Math.round((kidsSpent.amount / totals.expenses) * 100);
-            if (kidsPct > 25) {
-                tips.dashboard.push({
-                    emoji: '🚦',
-                    text: `Los gastos de los chicos representan el ${kidsPct}% del total. Aplicá el Semáforo Estratégico: 🟢 Esencial → pagar en el vencimiento. 🟡 Negociable → ¿puede esperar al próximo ingreso? 🔴 Postergable → ese dinero rinde más invertido. (Cap. 4)`,
-                    type: 'warning'
-                });
-            }
+        if (kidsSpent && kidsSpent.amount > 0 && totals.expenses > 0 && Math.round((kidsSpent.amount / totals.expenses) * 100) > 25) {
+            tips.dashboard.push({ emoji: '🚦', text: 'Los gastos de los chicos representan una parte importante del total. Aplicá el Semáforo: 🟢 Esencial → pagar en el vencimiento. 🟡 Negociable → ¿puede esperar? 🔴 Postergable → ese dinero rinde más invertido. (Cap. 4)', type: 'warning' });
         }
 
-        // ---- 7. MÉTRICA DE RENDIMIENTO MENSUAL ----
-        // Calcular intereses simulados ganados por esperar vencimientos
+        // ---- 7. RENDIMIENTO MENSUAL ----
         if (duePayments.length > 0) {
-            let totalSimulatedInterest = 0;
-            duePayments.forEach(dp => {
+            const paidOnTime = duePayments.filter(dp => {
                 const key = `${year}-${String(month + 1).padStart(2, '0')}`;
                 if (dp.payments && dp.payments[key] && dp.amount > 0) {
                     const paidDay = new Date(dp.payments[key].paidDate + 'T12:00:00').getDate();
-                    // Interés ganado = días que tuvo el dinero × tasa diaria × monto
-                    const daysHeld = Math.max(0, paidDay - 1); // Desde el día 1 del mes
-                    totalSimulatedInterest += dp.amount * DAILY_RATE * daysHeld;
+                    return paidDay >= dp.dueDay - 1;
                 }
+                return false;
             });
-            if (totalSimulatedInterest >= 1) {
-                tips.dashboard.push({
-                    emoji: '📈',
-                    text: `💰 Rendimiento del mes: gestionando tu flujo de caja, tu capital generó ~${formatTipCurrency(Math.round(totalSimulatedInterest))} en intereses potenciales. Seguí así — cada día que tu plata trabaja es un día que gana para tu familia.`,
-                    type: 'success'
-                });
+            if (paidOnTime.length > 0) {
+                tips.dashboard.push({ emoji: '📈', text: '¡Buena gestión de flujo! Al esperar los vencimientos, tu capital estuvo generando rendimiento extra. Cada día que tu plata trabaja es un día que gana para tu familia.', type: 'success' });
             }
         }
 
-        // ---- 8. INFLACIÓN PERSONAL (dinero estático perdiendo valor) ----
+        // ---- 8. INFLACIÓN PERSONAL ----
         if (balance.total > 0 && totals.savings === 0 && currentDay >= 15) {
-            tips.dashboard.push({
-                emoji: '📉',
-                text: `Llevás 15 días sin destinar una parte a ahorro o inversión. Tu saldo está perdiendo valor frente a la inflación cada día que pasa. Incluso ${formatTipCurrency(Math.round(balance.total * 0.05))} en una cuenta remunerada marca la diferencia. (Cap. 7)`,
-                type: 'danger'
-            });
+            tips.dashboard.push({ emoji: '📉', text: 'Llevás medio mes sin destinar nada a ahorro o inversión. Tu saldo pierde valor frente a la inflación cada día. Incluso un pequeño monto en una cuenta remunerada marca la diferencia. (Cap. 7)', type: 'danger' });
         }
 
-        // =================================================================
-        //   BUDGET TIPS — GESTIÓN ESTRATÉGICA
-        // =================================================================
+        // ---- BUDGET TIPS ----
         if (budgets.length > 0) {
             const spentMap = {};
             catTotals.forEach(ct => { spentMap[ct.category] = ct.amount; });
-            const overBudget = budgets.filter(b => (spentMap[b.category] || 0) > b.amount);
-
-            overBudget.forEach(b => {
+            budgets.filter(b => (spentMap[b.category] || 0) > b.amount).forEach(b => {
                 const cat = Categories.getById(b.category);
-                const excess = (spentMap[b.category] || 0) - b.amount;
-                tips.budget.push({
-                    emoji: '🔴',
-                    text: `Te excediste en ${cat.name} por ${formatTipCurrency(excess)}. Ese exceso invertido hoy generaría ${formatTipCurrency(Math.round(excess * DAILY_RATE * (daysInMonth - currentDay)))} de intereses este mes. Recortá con bisturí, no con hacha — cada peso que salvas rinde. (Cap. 5)`,
-                    type: 'danger',
-                    categoryId: b.category
-                });
+                tips.budget.push({ emoji: '🔴', text: `Te excediste en ${cat.name}. Ese exceso podría estar generando intereses. Recortá con bisturí, no con hacha. (Cap. 5)`, type: 'danger', categoryId: b.category });
             });
-
-            const nearLimit = budgets.filter(b => {
-                const spent = spentMap[b.category] || 0;
-                return spent > b.amount * 0.8 && spent <= b.amount;
-            });
-            nearLimit.forEach(b => {
+            budgets.filter(b => { const s = spentMap[b.category] || 0; return s > b.amount * 0.8 && s <= b.amount; }).forEach(b => {
                 const cat = Categories.getById(b.category);
-                const remaining = b.amount - (spentMap[b.category] || 0);
-                tips.budget.push({
-                    emoji: '⚠️',
-                    text: `Estás al 80%+ en ${cat.name}. Te quedan ${formatTipCurrency(remaining)}. Si no gastás ese remanente, dejalo generando interés. No gastes por gastar.`,
-                    type: 'warning',
-                    categoryId: b.category
-                });
+                tips.budget.push({ emoji: '⚠️', text: `Estás cerca del límite en ${cat.name}. Si no gastás el remanente, dejalo generando interés. No gastes por gastar.`, type: 'warning', categoryId: b.category });
             });
-
-            // Presupuesto subutilizado = dinero que puede rendir
-            const underUsed = budgets.filter(b => {
-                const spent = spentMap[b.category] || 0;
-                return spent < b.amount * 0.5 && b.amount > 0 && currentDay >= 20;
-            });
+            const underUsed = budgets.filter(b => { const s = spentMap[b.category] || 0; return s < b.amount * 0.5 && b.amount > 0 && currentDay >= 20; });
             if (underUsed.length > 0) {
-                const totalUnused = underUsed.reduce((s, b) => s + (b.amount - (spentMap[b.category] || 0)), 0);
-                tips.budget.push({
-                    emoji: '🎯',
-                    text: `Tenés ${formatTipCurrency(Math.round(totalUnused))} sin usar en ${underUsed.length} categoría${underUsed.length > 1 ? 's' : ''}. Misión Hero: Redirigí ese excedente a tu cuenta remunerada antes de que termine el mes. ¡Es plata que ya le ganaste al presupuesto!`,
-                    type: 'success'
-                });
+                tips.budget.push({ emoji: '🎯', text: `Tenés presupuesto sin usar en ${underUsed.length} categoría${underUsed.length > 1 ? 's' : ''}. Misión Hero: Redirigí ese excedente a tu cuenta remunerada antes de que termine el mes.`, type: 'success' });
             }
         } else {
-            tips.budget.push({ emoji: '📊', text: 'Sin presupuesto, tu plata se escapa sin control. Armá tu presupuesto base con un "Fondo de Culpa Cero": un 5% que es TUYO, sin culpa, y que rinde intereses mientras decidís en qué usarlo. (Cap. 6)', type: 'info' });
+            tips.budget.push({ emoji: '📊', text: 'Sin presupuesto, tu plata se escapa sin control. Armá tu presupuesto base con un "Fondo de Culpa Cero": un porcentaje que es TUYO, sin culpa. (Cap. 6)', type: 'info' });
         }
 
-        // =================================================================
-        //   GOAL TIPS — RENDIMIENTO + PROGRESO
-        // =================================================================
+        // ---- GOAL TIPS ----
         const goals = Store.getGoals();
         goals.forEach(goal => {
             if (goal.type === 'savings' && goal.targetAmount > 0) {
                 const pct = Math.round((goal.currentAmount / goal.targetAmount) * 100);
                 if (pct >= 100) {
-                    tips.goals.push({ emoji: '🎉', text: `¡Lograste "${goal.name}"! 🏆 Ahora esos fondos pueden seguir rindiendo intereses mientras decidís el próximo paso. No los dejes quietos.`, type: 'success', goalId: goal.id });
+                    tips.goals.push({ emoji: '🎉', text: `¡Lograste "${goal.name}"! 🏆 Esos fondos pueden seguir rindiendo intereses mientras decidís el próximo paso.`, type: 'success', goalId: goal.id });
                 } else {
                     const deadline = new Date(goal.deadline + 'T12:00:00');
                     const daysLeft = Math.ceil((deadline - now) / (1000 * 60 * 60 * 24));
-                    const remaining = goal.targetAmount - goal.currentAmount;
-
-                    if (daysLeft > 0) {
-                        // Cuánto necesita ahorrar por día
-                        const dailyNeeded = remaining / daysLeft;
-                        const monthlyNeeded = dailyNeeded * 30;
-
-                        if (daysLeft <= 30 && pct < 80) {
-                            tips.goals.push({
-                                emoji: '⏰',
-                                text: `Quedan ${daysLeft} días para "${goal.name}" (${pct}%). Necesitás ${formatTipCurrency(Math.round(dailyNeeded))}/día. Cada peso que destines hoy empieza a generar interés compuesto inmediatamente. ¡Vos podés! 💪`,
-                                type: 'warning',
-                                goalId: goal.id
-                            });
-                        } else if (pct >= 50 && pct < 100) {
-                            // Proyectar cuánto generará en intereses lo ya ahorrado
-                            const interestOnSaved = goal.currentAmount * DAILY_RATE * daysLeft;
-                            if (interestOnSaved >= 1) {
-                                tips.goals.push({
-                                    emoji: '💎',
-                                    text: `"${goal.name}" va por el ${pct}%. Lo que ya ahorraste (${formatTipCurrency(goal.currentAmount)}) puede generar ~${formatTipCurrency(Math.round(interestOnSaved))} en intereses hasta tu fecha límite. Tu plata trabaja para vos.`,
-                                    type: 'success',
-                                    goalId: goal.id
-                                });
-                            }
-                        }
+                    if (daysLeft > 0 && daysLeft <= 30 && pct < 80) {
+                        tips.goals.push({ emoji: '⏰', text: `Quedan pocos días para "${goal.name}". Cada peso que destines hoy genera interés compuesto. ¡Vos podés! 💪`, type: 'warning', goalId: goal.id });
+                    } else if (daysLeft > 0 && pct >= 50 && pct < 100) {
+                        tips.goals.push({ emoji: '💎', text: `"${goal.name}" avanza bien. Lo que ya ahorraste puede generar intereses hasta tu fecha límite. Tu plata trabaja para vos.`, type: 'success', goalId: goal.id });
                     }
                 }
             }
         });
         if (goals.length === 0) {
-            tips.goals.push({ emoji: '🎯', text: '¿Ya creaste tu Matafuegos Financiero? Es tu primer escudo: un fondo de emergencia que rinde intereses mientras te protege. Empezá con lo que puedas — cada peso cuenta. (Cap. 10)', type: 'info' });
+            tips.goals.push({ emoji: '🎯', text: '¿Ya creaste tu Matafuegos Financiero? Es tu primer escudo: un fondo de emergencia que rinde intereses mientras te protege. (Cap. 10)', type: 'info' });
         }
 
         return tips;
     }
+
 
     // =========================================
     //    AI BUDGET GENERATION

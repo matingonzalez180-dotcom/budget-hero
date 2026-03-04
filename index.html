@@ -110,6 +110,15 @@
                     </svg>
                     <span>Calendario</span>
                 </button>
+                <button class="nav-item" data-page="tips" id="nav-tips">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="10" />
+                        <line x1="12" y1="16" x2="12" y2="12" />
+                        <line x1="12" y1="8" x2="12.01" y2="8" />
+                    </svg>
+                    <span>Tips IA</span>
+                </button>
             </nav>
             <div class="sidebar-footer">
                 <button class="theme-toggle" id="theme-toggle" aria-label="Cambiar tema">
@@ -174,7 +183,13 @@
             <div class="page-container">
                 <!-- Dashboard Page -->
                 <div id="page-dashboard" class="page active">
-                    <div id="dashboard-tips-container" class="contextual-tips-grid"></div>
+                    <!-- AI Tip Banner (single, dismissable) -->
+                    <div id="dashboard-tip-banner" class="tip-banner" style="display:none;">
+                        <span class="tip-banner-emoji" id="tip-banner-emoji"></span>
+                        <span class="tip-banner-text" id="tip-banner-text"></span>
+                        <a href="#" class="tip-banner-link" id="tip-banner-link">Ver todos →</a>
+                        <button class="tip-banner-close" id="tip-banner-close" aria-label="Cerrar tip">✕</button>
+                    </div>
                     <!-- Header: Mascot Greeting -->
                     <div class="mascot-container" id="mascot-greeting">
                         <svg class="mascot-character" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
@@ -671,6 +686,30 @@
 
                     <h3 style="margin: 0 0 var(--space-3); font-weight: 700;">📋 Vencimientos del Mes</h3>
                     <div id="due-payments-list" class="due-payments-list"></div>
+                </section>
+
+                <!-- Tips IA Page -->
+                <section id="page-tips" class="page">
+                    <div class="tips-page-header">
+                        <h2>🧠 Consejos de tu Estratega Financiera</h2>
+                        <p class="tips-page-subtitle">Todos los insights personalizados para optimizar tu flujo de caja.
+                        </p>
+                    </div>
+
+                    <div class="tips-section">
+                        <h3 class="tips-section-title">📊 Dashboard</h3>
+                        <div id="tips-page-dashboard" class="tips-list"></div>
+                    </div>
+
+                    <div class="tips-section">
+                        <h3 class="tips-section-title">💰 Presupuesto</h3>
+                        <div id="tips-page-budget" class="tips-list"></div>
+                    </div>
+
+                    <div class="tips-section">
+                        <h3 class="tips-section-title">🎯 Objetivos</h3>
+                        <div id="tips-page-goals" class="tips-list"></div>
+                    </div>
                 </section>
             </div>
         </main>
