@@ -70,6 +70,7 @@ window.App = (() => {
         $$('.type-btn').forEach(btn => btn.addEventListener('click', () => setTransactionType(btn.dataset.type)));
         safeBind('#tx-description', 'input', handleDescriptionInput);
         safeBind('#btn-apply-ai', 'click', applyAiSuggestion);
+        safeBind('#tx-currency', 'change', updateCurrencySymbol);
 
         // Budget modal
         safeBind('#btn-add-budget', 'click', openBudgetModal);
@@ -233,6 +234,15 @@ window.App = (() => {
         } catch { return `$${Math.round(amount)}`; }
     }
 
+    const CURRENCY_SYMBOLS = { ARS: '$', USD: 'US$', EUR: '€' };
+
+    function fmtCurrency(amount, currency) {
+        const sym = CURRENCY_SYMBOLS[currency] || currency;
+        try {
+            return new Intl.NumberFormat('es-AR', { style: 'currency', currency, minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(amount);
+        } catch { return `${sym} ${amount.toFixed(2)}`; }
+    }
+
     // ---- PERIOD LABEL ----
     function periodLabel(period) {
         return { day: 'del Día', week: 'de la Semana', month: 'del Mes', year: 'del Año' }[period] || 'del Mes';
@@ -256,10 +266,39 @@ window.App = (() => {
         $('#monthly-income').textContent = fmt(totals.income);
         $('#monthly-expenses').textContent = fmt(totals.expenses);
 
-        // Savings metric (numeric)
-        $('#monthly-savings-amount').textContent = fmt(totals.savings);
-        const savingsPct = totals.income > 0 ? Math.round((totals.savings / totals.income) * 100) : 0;
+        // Multi-currency balance sub-lines
+        const foreignBalances = Store.getTotalBalanceByCurrency();
+        const balSubsEl = $('#balance-currency-subs');
+        if (balSubsEl) {
+            const entries = Object.entries(foreignBalances);
+            if (entries.length > 0) {
+                balSubsEl.innerHTML = entries.map(([cur, data]) =>
+                    `<div class="currency-sub-line"><span class="currency-sub-flag">${cur === 'USD' ? '🇺🇸' : '🇪🇺'}</span> ${fmtCurrency(data.savings, cur)}</div>`
+                ).join('');
+            } else {
+                balSubsEl.innerHTML = '';
+            }
+        }
+
+        // Savings metric (numeric) - ARS only in primary display
+        const savingsByCurrency = Store.getSavingsByCurrencyForPeriod(dashboardPeriod);
+        const arsSavings = savingsByCurrency['ARS'] || 0;
+        $('#monthly-savings-amount').textContent = fmt(arsSavings);
+        const savingsPct = totals.income > 0 ? Math.round((arsSavings / totals.income) * 100) : 0;
         $('#monthly-savings-pct').textContent = `${savingsPct}% de ingresos`;
+
+        // Multi-currency savings sub-lines
+        const savSubsEl = $('#savings-currency-subs');
+        if (savSubsEl) {
+            const foreignSavings = Object.entries(savingsByCurrency).filter(([cur]) => cur !== 'ARS');
+            if (foreignSavings.length > 0) {
+                savSubsEl.innerHTML = foreignSavings.map(([cur, amount]) =>
+                    `<div class="currency-sub-line"><span class="currency-sub-flag">${cur === 'USD' ? '🇺🇸' : '🇪🇺'}</span> ${fmtCurrency(amount, cur)}</div>`
+                ).join('');
+            } else {
+                savSubsEl.innerHTML = '';
+            }
+        }
 
         // Income vs Expenses bars
         const maxIE = Math.max(totals.income, totals.expenses, 1);
@@ -486,7 +525,10 @@ window.App = (() => {
         const cls = tx.type === 'income' ? 'income' : (tx.type === 'savings' ? 'savings' : 'expense');
         const dateObj = new Date((tx.date || new Date().toISOString().split('T')[0]) + 'T12:00:00');
         const dateStr = !isNaN(dateObj.getTime()) ? dateObj.toLocaleDateString('es-ES', { month: 'short', day: 'numeric' }) : '---';
-        return `<div class="transaction-row" data-id="${tx.id}"><div class="tx-icon" style="background:${cat.color}22;color:${cat.color}">${cat.emoji}</div><div class="tx-info"><span class="tx-desc">${tx.description}</span><span class="tx-meta">${cat.name} · ${dateStr}</span></div><span class="tx-amount ${cls}">${sign}${fmt(tx.amount)}</span><div class="tx-actions"><button class="btn-icon-sm btn-edit-tx" data-id="${tx.id}" title="Editar">✏️</button><button class="btn-icon-sm btn-delete-tx" data-id="${tx.id}" title="Eliminar">🗑️</button></div></div>`;
+        const txCurrency = tx.currency || 'ARS';
+        const amountText = txCurrency !== 'ARS' ? fmtCurrency(tx.amount, txCurrency) : fmt(tx.amount);
+        const currBadge = txCurrency !== 'ARS' ? `<span class="tx-currency-badge">${txCurrency}</span>` : '';
+        return `<div class="transaction-row" data-id="${tx.id}"><div class="tx-icon" style="background:${cat.color}22;color:${cat.color}">${cat.emoji}</div><div class="tx-info"><span class="tx-desc">${tx.description}</span><span class="tx-meta">${cat.name} · ${dateStr}</span></div><span class="tx-amount ${cls}">${sign}${amountText}${currBadge}</span><div class="tx-actions"><button class="btn-icon-sm btn-edit-tx" data-id="${tx.id}" title="Editar">✏️</button><button class="btn-icon-sm btn-delete-tx" data-id="${tx.id}" title="Eliminar">🗑️</button></div></div>`;
     }
 
     // ---- MASCOT ----
@@ -561,6 +603,9 @@ window.App = (() => {
         $('#tx-date').value = tx ? tx.date : new Date().toISOString().split('T')[0];
         $('#tx-notes').value = tx ? (tx.notes || '') : '';
         if (tx) $('#tx-category').value = tx.category;
+        // Set currency for savings
+        const currSel = $('#tx-currency');
+        if (currSel) currSel.value = tx ? (tx.currency || 'ARS') : 'ARS';
         $('#ai-suggestion').style.display = 'none';
         $('#transaction-modal').classList.add('active');
         setTimeout(() => $('#tx-amount').focus(), 100);
@@ -575,7 +620,28 @@ window.App = (() => {
     function setTransactionType(type) {
         $$('.type-btn').forEach(b => b.classList.remove('active'));
         $(`.type-btn[data-type="${type}"]`).classList.add('active');
+        // Show/hide currency selector for savings
+        const currSel = $('#tx-currency');
+        const currSym = $('#tx-currency-symbol');
+        if (currSel) {
+            if (type === 'savings') {
+                currSel.style.display = '';
+                updateCurrencySymbol();
+            } else {
+                currSel.style.display = 'none';
+                if (currSym) currSym.textContent = '$';
+            }
+        }
         populateCategories(type);
+    }
+
+    function updateCurrencySymbol() {
+        const currSel = $('#tx-currency');
+        const currSym = $('#tx-currency-symbol');
+        if (currSel && currSym) {
+            const sym = CURRENCY_SYMBOLS[currSel.value] || '$';
+            currSym.textContent = sym;
+        }
     }
 
     function populateCategories(type) {
@@ -666,6 +732,12 @@ window.App = (() => {
             date: $('#tx-date').value || new Date().toISOString().split('T')[0],
             notes: $('#tx-notes').value.trim(),
         };
+
+        // Add currency for savings
+        if (type === 'savings') {
+            const currSel = $('#tx-currency');
+            txData.currency = currSel ? currSel.value : 'ARS';
+        }
 
         // Passive AI Learning
         if (!editingTx) {

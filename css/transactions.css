@@ -108,6 +108,19 @@
     color: var(--info, #67E8F9);
 }
 
+.tx-currency-badge {
+    display: inline-block;
+    font-size: 10px;
+    font-weight: 700;
+    background: var(--accent);
+    color: white;
+    padding: 1px 5px;
+    border-radius: var(--radius-full);
+    margin-left: 4px;
+    vertical-align: middle;
+    letter-spacing: 0.03em;
+}
+
 .tx-actions {
     display: flex;
     gap: var(--space-1);

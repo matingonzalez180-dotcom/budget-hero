@@ -610,12 +610,39 @@ const Store = (() => {
         getTotalBalance() {
             let income = 0, expenses = 0, savings = 0;
             data.transactions.forEach(t => {
+                const cur = t.currency || 'ARS';
+                if (cur !== 'ARS') return; // Only ARS in main balance
                 if (t.type === 'income') income += t.amount;
                 else if (t.type === 'savings') savings += t.amount;
                 else expenses += t.amount;
             });
             const total = income - expenses;
             return { total, savings, operational: total - savings };
+        },
+
+        getTotalBalanceByCurrency() {
+            const byCurrency = {};
+            data.transactions.forEach(t => {
+                const cur = t.currency || 'ARS';
+                if (cur === 'ARS') return; // ARS handled by getTotalBalance()
+                if (!byCurrency[cur]) byCurrency[cur] = { total: 0, savings: 0 };
+                if (t.type === 'savings') byCurrency[cur].savings += t.amount;
+                // Foreign currency txs are only savings, so total = savings
+                byCurrency[cur].total += t.amount;
+            });
+            return byCurrency;
+        },
+
+        getSavingsByCurrencyForPeriod(period) {
+            const { from, to } = getDateRange(period);
+            const txs = data.transactions.filter(t => t.date && t.date >= from && t.date <= to && t.type === 'savings');
+            const byCurrency = {};
+            txs.forEach(t => {
+                const cur = t.currency || 'ARS';
+                if (!byCurrency[cur]) byCurrency[cur] = 0;
+                byCurrency[cur] += t.amount;
+            });
+            return byCurrency;
         },
 
         getMultiMonthCategoryAverages(months) {
